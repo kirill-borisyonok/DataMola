@@ -1,0 +1,901 @@
+html {
+    font-size: 15px;
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    color: black;
+
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+main {
+    flex: 1 0 auto;
+}
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/*Header
+==============================*/
+.header {
+    position: fixed;
+
+    width: 100%;
+    height: 5rem;
+
+    left: 0;
+    top: 0;
+    z-index: 1000;
+
+    background-color: rgba(255, 255, 255, 85%);
+
+    border-bottom: 1px solid #F0EEFF; 
+
+    flex: 0 0 auto;
+}
+
+.header__inner {
+    display: flex;
+    align-items: center;
+}
+
+.header__logo {
+    border-radius: 50%;
+
+    transition: background-color .2s linear;
+}
+    
+.header__logo:hover {
+    background-color: rgb(240, 238, 255, 0.7);
+}
+
+.header__logo-img {
+    padding: 1.2rem 1rem;
+}
+
+.header__text {
+    margin-left: 3.4rem;
+
+    font-size: 1rem;
+    font-weight: 700;
+    color: black;
+
+    text-decoration: none;
+}
+
+.header__text--other-page {
+    opacity: 65%;
+    transition: opacity .2s linear
+}
+
+.header__text--other-page:hover {
+    opacity: 1;
+}
+
+.header__text--page-name {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.header__arrow {
+    margin: 0 1rem;
+}
+
+.header__client {
+    margin-left: auto;
+}
+
+.header__client-user {
+    display: flex;
+    align-items: center;
+}
+
+.header__client-user-name {
+    margin-right: 1rem;
+    align-items: center;
+    padding: .6rem;
+    display: flex;
+    border-radius: 50px;
+}
+
+.header__client-user-name:hover {
+    background-color: #F0EEFF;
+    cursor: pointer;
+}
+
+.header__client-user-photo {
+    margin-left: .3rem;
+    margin-right: 1.13333rem;
+    height: 2.4rem;
+    border-radius: 50px;
+}
+
+.header__client-user-text {
+    padding-right: 2rem;
+    font-size: 1rem;
+
+    font-weight: 700;
+}
+
+.btn {
+    display: flex;
+    height: 100%;
+    justify-content: center;
+
+    font-size: .8rem;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: 700;
+    text-decoration: none;
+
+    padding: 1.06rem 1.3rem;
+
+    background-color: #1D9BF0;
+
+    border: solid 1px #1D9BF0;
+    border-radius: 50px;
+
+    cursor: pointer;
+
+    transition: background-color .2s linear;
+}
+
+.btn:hover {
+    background-color: #226BCA;
+}
+
+.btn--submit {
+    height: 100%;
+    justify-content: center;
+
+    font-size: .8rem;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: 700;
+    text-decoration: none;
+
+    padding: 1.06rem 1.94rem;
+
+    background-color: #1D9BF0;
+
+    border: solid 1px #1D9BF0;
+    border-radius: 50px;
+
+    cursor: pointer;
+
+    transition: background-color .2s linear;
+}
+
+.btn--submit:hover {
+    background-color: #226BCA;
+}
+
+.btn--sml {
+    margin-left: .6rem;
+    padding: .2rem 0;
+    width: 4rem;
+
+    text-transform: none;
+    font-size: .8rem;
+
+    border-radius: 50px;
+    border: solid 1px #1D9BF0;
+}
+
+.btn--white {
+    background-color: #fff;
+    color: #858585;
+    text-decoration: underline;
+    border: solid 1px #858585;
+    cursor: pointer;
+    transition: background-color .2s linear, color .2s linear;
+}
+
+.btn--white:hover {
+    background-color: #858585;
+    opacity: 50%;
+    color: #fff;
+}
+
+.btn--load {
+    margin: 1.2rem auto;
+    padding: .6rem .8rem;
+}
+
+.btn--filter {
+    width: 7.2rem;
+    margin-left: 2.4rem;
+}
+
+.btn--filter:first-child {
+    margin-left: 0;
+}
+
+.btn__text {
+    margin: auto .5rem;
+}
+
+.header__btn-img {
+    display: none;
+    opacity: 70%;
+}
+
+/* Tweets */
+.tweets {
+    margin-top: 5.94rem;
+    display: flex;
+}
+
+.tweets__inner {
+    display: flex;
+}
+
+.tweets__left{
+    width: 70%;
+
+    border-right: solid 1px rgb(240, 238, 255);
+}
+
+/* Tweets set */
+.tweets__set {
+    margin-left: .5rem;
+    padding-top: 1.6rem;
+}
+
+.tweets__set-inner {
+    display: flex;
+    
+    margin-bottom: .6rem;
+    margin-right: 1rem;
+}
+
+.tweets__set-photo {
+    margin: 0 auto;
+    height: 3.33rem;
+    width: 3.33rem;
+    border-radius: 50%;
+}
+
+.tweets__set-form {
+    width: 90%;
+    margin-right: auto;
+}
+
+.tweets__set-form-input {
+    display: block;
+   
+    padding-top: 1rem;
+    padding-left: .4rem;
+
+    height: 2.54rem;
+    width: 100%;
+    
+    font-size: 1.4rem;
+    line-height: 1.2;
+    font-weight: 300;
+    font-family: inherit;
+    resize: none;
+
+    border: solid 1px rgb(0, 0, 0, 30%);
+    color: black;
+}
+
+.tweets__set-form-input:focus {
+    outline: none;
+    border-color: none;
+}
+
+.tweets__set-form-button {
+    margin-left: 1rem;
+    margin-top: .6rem;
+    width: 100%;
+    text-align: right;
+}
+
+/* Tweets tape */
+.tweets__tape {
+    margin-top: .6rem;
+}
+
+.tweets__item-inner {
+    display: flex;
+}
+
+.tweets__item { 
+    padding: 1rem 0;
+
+    width: 100%;
+
+    border: solid 1px rgb(240, 238, 255);
+    border-right: none;
+
+    cursor: pointer;
+}
+
+.tweets__item--page {
+    border: solid 1px rgb(240, 238, 255);
+}
+
+.tweets__item:hover {
+    background-color: rgb(240, 238, 255);
+}
+
+.tweets__item-title {
+    display: flex;
+}
+
+.tweets__item-img {
+    margin: 0 1rem;
+    height: 3.33rem;
+    width: 3.33rem;
+    border-radius: 50%;
+}
+
+.tweets__item-author {
+    margin-right: 0.2rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: black;
+
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.tweets__item-author:hover {
+    text-decoration: underline;
+}
+
+.dot {
+    margin-right: .6rem;
+}
+
+.tweets__item-date {
+    margin-left: .8rem;
+    color: #536471;
+}
+
+.tweets__text {
+    margin-top: .8rem;
+    margin-right: 1rem;
+    line-height: 2rem;
+    font-size: 1.4rem;
+}
+
+.tweets__tags {
+    color: #1D9BF0;
+}
+
+/*  Tweets footer*/
+.tweets__item-footer {
+    margin-top: 1rem;
+
+    display: flex;
+    height: 1.66666;
+    justify-content: space-between;
+    text-align: center;
+}
+
+.comments {
+    margin-left: 8rem;
+    display: flex;
+    align-items: center;
+    transition: color .2s linear;
+}
+
+.comments:hover .comments__img {
+    fill: #ACCDFF;
+}
+
+.comments:hover .comments__text {
+    color: #ACCDFF;
+}
+
+.comments__img {
+    margin-right: 1rem;
+    width: 1.4rem;
+    height: 1.4rem;
+    fill: #858585;
+    border-radius: 50%;
+}
+
+.comments__text {
+    font-size: 1.4rem;
+    color: #858585;
+}
+
+.tweets__item-footer-button {
+    margin-right: 1rem;
+    display: flex;
+}
+
+.button__tweets-footer {
+    text-align: center;
+}
+
+/* Tweets filter */
+
+.tweets__right {
+    position: relative;
+    width: 30%;
+}
+
+.tweets__filter {
+    position: absolute;
+    left: 0;    
+}
+
+.tweets__filter-inner {
+    margin: 0 1rem 1rem;
+    position: fixed;
+    height: 38rem;
+    width: 23.26rem;
+    background-color: rgba(240, 238, 255, 0.25);
+    border-radius: 20px;
+}
+
+.tweets__filter-title {
+    margin-top: 1rem;
+    margin-left: 1rem;
+    font-size: 2rem;
+    font-weight: 700;
+    opacity: 70%;
+}
+
+.filter__form {
+    display: flex;
+    flex-direction: column;
+}
+
+.filter__form-item {
+    margin: .5rem 1rem;
+}
+
+.filter__input-title {
+    font-size: 1.4rem;
+}
+
+.filter__input {
+    margin-top: 1rem;
+    padding-left: 1rem;
+    width: 20rem;
+    height: 3rem;
+
+    font-size: 1.2rem;
+
+    background: #F0EEFF;
+    border-radius: 20px; 
+    border: none;
+}
+
+.filter__input:focus {
+    outline: none;
+    border-color: none;
+}
+
+.filter__input-date-elem {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.filter__input-text {
+    margin-right: .4rem;
+    text-align: right;
+    width: 10%;
+    font-size: 1rem;
+}
+
+.filter__input-date {
+    padding-left: 1rem;
+    height: 3rem;
+    font-size: 1rem;
+    background: #F0EEFF;
+    border-radius: 20px; 
+    border: none;
+}
+
+.filter__input-date:focus {
+    outline: none;
+    border-color: none;
+}
+
+.filter__footer {
+    display: flex;
+    justify-content: center;
+}
+
+/* Footer */
+.footer {
+    display: flex;
+    justify-content: center;
+    max-width: 100vw;
+
+    height: 4.6rem;
+    background-color: #fff;
+    align-items: center;
+
+    border-top: 1px solid #F0EEFF;
+    border-left: 1px solid #F0EEFF;
+
+    flex: 0 0 auto;
+}
+
+.footer__item {
+    margin-left: 2rem;
+    font-size: 1rem;
+    color: #858585;
+}
+
+.footer__item:first-child {
+    margin-left: 0;
+}
+
+
+/* Tweet page */
+.tweet {
+    margin-top: 5.94rem;
+    flex: 1 0 auto;
+}
+
+.container--tweet {
+    width: 100%;
+    max-width: 966px;
+    margin: 0 auto;
+}
+
+.comment-title {
+    margin-top: 1rem;
+    font-size: 1.4rem;
+}
+
+.comment__item { 
+    display: table;
+    margin-top: 1.4rem;
+    padding: 1rem 1rem 1rem 0;
+
+    background-color: rgba(196, 196, 196, 0.3);
+
+    border: solid 1px #F0EEFF;
+    border-radius: 20px;
+}
+
+.comment__item:last-child {
+    margin-bottom: 1.4rem;
+}
+
+.comment__item-inner {
+    display: flex;
+}
+
+.comment__item-title {
+    display: flex;
+}
+
+.comment__item-img {
+    margin: 0 1rem;
+    height: 3.33rem;
+    width: 3.33rem;
+    border-radius: 50%;
+}
+
+.comment__item-author {
+    margin-right: 0.2rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: black;
+
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.comment__item-author:hover {
+    text-decoration: underline;
+}
+
+.comment__item-date {
+    margin-left: .8rem;
+
+    font-size: 1rem;
+    color: #536471;
+}
+
+.comment__text {
+    margin-top: .5rem;
+    margin-right: 1rem;
+    line-height: 2rem;
+    font-size: 1.2rem;
+}
+
+/* Comment set */
+.comment__set {
+    margin-left: .5rem;
+    padding-top: 1.6rem;
+}
+
+.comment__set-inner {
+    display: flex;
+    
+    margin-bottom: .6rem;
+}
+
+.comment__set-photo {
+    margin-right: 1.8rem;
+    margin-left: .75rem;
+    height: 3.33rem;
+    width: 3.33rem;
+    border-radius: 50%;
+}
+
+.comment__set-form {
+    width: 100%;
+    margin-left: auto;
+}
+
+.comment__set-form-input {
+    display: block;
+   
+    padding-top: 1rem;
+    padding-left: .4rem;
+
+    height: 2.54rem;
+    width: 100%;
+    max-width: 100%;
+    
+    font-size: 1.4rem;
+    line-height: 1.2;
+    font-weight: 300;
+    font-family: inherit;
+    resize: none;
+
+    border: none;
+    
+    border-radius: 50px;
+    background: #F0EEFF;
+    color: black;
+}
+
+.comment__set-form-input {
+    max-width: 100%;
+    padding-left: .8rem;
+    transform: translate(-.8rem);
+    font-family: inherit;
+    resize: none;
+}
+
+.comment__set-form-input:focus {
+    outline: none;
+    border-color: none;
+}
+
+.comment__set-form-button {
+    margin-top: .8rem;
+    text-align: right;
+}
+
+/* Sign up */
+.sign-up {
+    margin-top: 5rem;
+    display: flex;
+}
+
+.sign-up__form {
+    margin-left: 3.8rem;
+}
+
+.sign-up__form-title {
+    max-width: 25rem;
+    margin-top: 2.6rem;
+    font-size: 3rem;
+    font-weight: 700;
+}
+
+.sign-up__form-inner {
+    margin-top: 1rem;
+    margin-bottom: 4rem;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.sign-up__form-input {
+    margin-bottom: 1.6rem;
+
+    padding-left: 1rem;
+    width: 24.4rem;
+    height: 3.74rem;
+    font-size: 1.6rem;
+
+    border: 1px solid #536471;
+    border-radius: 20px;
+}
+
+.btn--sign-up {
+    margin-top: 1rem;
+    width: 25.66666rem;
+    height: 4rem;
+
+    font-size: 2rem;
+    color: #1D9BF0;
+
+    font-weight: 700;
+    text-decoration: none;
+
+    background-color: #fff;
+
+    border: 1px solid #536471;
+    border-radius: 50px;
+
+    cursor: pointer;
+
+    transition: background-color .2s linear;
+}
+
+.btn--sign-up:hover {
+    background-color: #F0EEFF;
+}
+
+.sign-up__form-footer {
+    font-size: 1.6rem;
+}
+
+.sign-up__form-footer-link {
+    margin-left: .6rem;
+    text-decoration: none;
+    color: #1D9BF0;
+}
+
+.sign-up__form-footer-link:hover {
+    text-decoration: underline;
+}
+
+/* Error */
+.error {
+    margin: 0 7.7rem;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    flex-direction: column;
+}
+
+.error__title {
+    font-size: 4rem;
+    font-weight: 700;
+}
+
+.error__text {
+    margin-bottom: 2.2rem;
+    font-size: 1.8rem;
+}
+
+.btn--error {
+    padding: 1rem 8.8rem;
+}
+
+
+/* Helpers */
+.hide {
+    display: none;
+}
+
+/* Media */
+
+@media (max-width: 1181px) {
+    html {
+        font-size: 12px;
+    }
+
+    .tweet {
+        padding: 0 1rem;
+    }
+
+    .header__logo-img {
+        padding: .8rem .6rem;
+    }
+}
+
+@media (max-width: 1001px) {
+    html {
+        font-size: 10px;
+    }
+}
+
+@media (max-width: 820px) {
+
+    .header__client {
+        margin-right: 1rem;
+    }
+
+    .tweets__left {
+        width: 100%;
+        padding: 0 1rem;
+    }
+
+    .tweets__right {
+        display: none;
+    }
+
+    .footer:hover {
+        background-color: #F6F6F6;
+    }
+
+    .footer:hover .footer__img {
+        stroke: #0038FF;
+    }
+
+    .footer__item {
+        display: none;
+    }
+
+    .sign-up ~ footer {
+        display: none;
+    }
+
+    .tweet ~ footer {
+        display: none;
+    }
+
+    .error ~ footer {
+        display: none;
+    }
+
+    .sign-up__rigth {
+        width: 100%;
+        max-width: 100%;
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
+    }
+
+    .sign-up__form {
+        margin: 0;
+    }
+
+    .sign-up__left {
+        display: none
+    }
+}
+
+@media (max-width: 414px) {
+    .htlm {
+        font-size: 10px;
+    }
+    
+    .header__logo:hover {
+        background: none;
+    }
+
+    .header__arrow,
+    .header__text--page-name {
+        display: none;
+    }
+
+    .header__client-user-name {
+        margin-right: .4rem;
+        padding: .2rem;
+    }
+
+    header .btn {
+        display: none;
+    }
+
+    .header__btn-img {
+        display: block;
+    }
+
+    .btn--error {
+        padding: 1rem 5rem;
+    }
+}
