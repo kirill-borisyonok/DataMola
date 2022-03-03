@@ -1,0 +1,95 @@
+.modal {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    overflow: auto; 
+
+    background-color: rgba(142, 143, 148, 0.5);
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.modal__dialog {
+    width: 100%;
+    max-width: 600px;
+    height: 300px;
+    margin: auto;
+    position: relative;
+
+    background-color: #fff;
+}
+
+.header {
+    padding: 0 2rem;
+    height: 5rem;
+
+    display: flex;
+    justify-content: space-between;
+}
+
+.header__title {
+    margin: auto 0;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.header__img {
+    margin: auto 0;
+    cursor: pointer;
+}
+
+.header__img:hover .header__svg{
+    fill: #000;
+}
+
+.main__text {
+    padding: 1rem 2rem 2rem;
+
+    font-size: 1.2rem;
+
+    border-top: 1px solid #F0EEFF;
+    border-bottom: 1px solid #F0EEFF;
+}
+
+.footer {
+    margin-top: 1rem;
+    display: flex;
+    padding-right: 2rem;
+    justify-content: right;
+}
+
+.btn {
+    margin: 0 .5rem;
+    padding: .6rem 1rem;
+
+    background-color: #a0a0a0;
+
+    font-size: 1rem;
+    color: #fff;
+
+    border: none;
+    border-radius: 5px;
+
+    cursor: pointer;
+
+    transition: all .2s linear;
+}
+
+.btn:hover {
+    background-color: #8d8c8c;
+}
+
+.btn:last-child {
+    margin-right: 0;
+}
+
+.btn--blue {
+    background-color: #225dff;
+}
+
+.btn--blue:hover {
+    background-color: #033ee0;
+}
