@@ -186,6 +186,7 @@ h1, h2, h3, h4, h5, h6 {
     margin-left: .6rem;
     padding: .2rem 0;
     width: 4rem;
+    align-items: center;
 
     text-transform: none;
     font-size: .8rem;
@@ -543,6 +544,9 @@ h1, h2, h3, h4, h5, h6 {
     margin-left: 0;
 }
 
+.footer__img {
+    display: none;
+}
 
 /* Tweet page */
 .tweet {
@@ -837,6 +841,10 @@ h1, h2, h3, h4, h5, h6 {
 
     .footer__item {
         display: none;
+    }
+
+    .footer__img {
+        display: block;
     }
 
     .sign-up ~ footer {
