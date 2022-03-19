@@ -549,7 +549,6 @@ const twitterModule = (function () {
 
         if (validateComment(comment)) {
             tweetAddComment.comments.push(comment);
-            tweetAddComment.comments.sort((a, b) => b.createdAt - a.createdAt)
             return true;
         } else return false;
 
