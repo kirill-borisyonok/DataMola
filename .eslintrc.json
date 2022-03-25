@@ -1,0 +1,16 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "extends": "airbnb-base/legacy",
+    "parserOptions": {
+        "ecmaVersion": "latest"
+    },
+    "rules": {
+        "max-classes-per-file": ["error", 3],
+        "indent": ["error", 4],
+        "no-underscore-dangle": ["error", { "allow": ["_id", "_author", "_createdAt", "_user"], "allowAfterThis": true }],
+        "max-len": ["error", { "code": 200 }]
+    }
+}
