@@ -193,82 +193,6 @@ const tweets = [
     }
 ];
 
-class Tweet {
-    constructor(tweet) {
-        this._id = tweet.id;
-        this.text = tweet.text;
-        this._createdAt = tweet.createdAt;
-        this._author = tweet.author;
-        this.comments = tweet.comments.map(item => new Comment(item));
-    }
-
-    get id() {
-        return this._id;
-    }
-
-    get createdAt() {
-        return this._createdAt;
-    }
-
-    get author() {
-        return this._author;
-    }
-
-    static maxTextTweetLength = 280;
-
-    static validate(tw) {
-        const tweetsMandatoryKey = ['_id', 'text', '_createdAt', '_author', 'comments'];
-
-        // проверка на наличие обязательных полей
-        const validateKey = () => {
-            let trueKey = 0;
-            for (let tweetsKey of tweetsMandatoryKey) {
-                if (tw.hasOwnProperty(tweetsKey)) {
-                    trueKey += 1;
-                } else {
-                    console.log(`Введите ${tweetsKey}`);
-                }
-            }
-            return trueKey === 5;
-        };
-
-        // проверка на соответствие полей необходимым условиям
-        const validateId = () => {
-            return typeof tw._id === 'string' && tw._id !== '';
-        };
-
-        const validateText = () => {
-            return typeof tw.text === 'string' && tw.text !== '' && tw.text.length < Tweet.maxTextTweetLength;
-        };
-
-        const validateCreatedAt = () => {
-            return tw._createdAt instanceof Date;
-        };
-
-        const validateAuthor = () => {
-            return typeof tw._author === 'string' && tw._author !== '';
-        };
-
-        const validateComment = () => {
-            return Array.isArray(tw.comments);
-        };
-
-        const tweetsValid = validateKey()
-            && validateId()
-            && validateText()
-            && validateCreatedAt()
-            && validateAuthor()
-            && validateComment();
-
-        return tweetsValid;
-    }
-}
-
-// const tweet1 = new Tweet(tweets[0]);
-
-// console.log(Tweet.validate(tweet1));
-// console.log(tweet1);
-
 class Comment {
     constructor(commentFields) {
         this._id = commentFields.id;
@@ -295,16 +219,8 @@ class Comment {
         const commentsMandatoryKey = ['id', 'text', 'createdAt', 'author'];
 
         // проверка на наличие обязательных полей
-        const validateKey = function () {
-            let trueKey = 0;
-            for (let commentsKey of commentsMandatoryKey) {
-                if (com.hasOwnProperty(commentsKey)) {
-                    trueKey += 1;
-                } else {
-                    console.log(`Введите в комментарий ${commentsKey}`);
-                }
-            }
-            return trueKey === 4;
+        const validateKey = () => {
+            return commentsMandatoryKey.filter(item => item in com).length === 4;
         };
 
         // проверка на соответствие полей необходимым условиям
@@ -334,30 +250,96 @@ class Comment {
     }
 }
 
+class Tweet {
+    constructor(tweet) {
+        this._id = tweet.id;
+        this.text = tweet.text;
+        this._createdAt = tweet.createdAt;
+        this._author = tweet.author;
+        this.comments = tweet.comments.map(item => new Comment(item));
+    }
+
+    get id() {
+        return this._id;
+    }
+
+    get createdAt() {
+        return this._createdAt;
+    }
+
+    get author() {
+        return this._author;
+    }
+
+    static maxTextTweetLength = 280;
+
+    static validate(tw) {
+        const tweetsMandatoryKey = ['id', 'text', 'createdAt', 'author', 'comments'];
+
+        // проверка на наличие обязательных полей
+        const validateKey = () => {
+            return tweetsMandatoryKey.filter(item => item in tw).length === 5;
+        };
+
+        // проверка на соответствие полей необходимым условиям
+        const validateId = () => {
+            return typeof tw.id === 'string' && tw.id !== '';
+        };
+
+        const validateText = () => {
+            return typeof tw.text === 'string' && tw.text !== '' && tw.text.length < Tweet.maxTextTweetLength;
+        };
+
+        const validateCreatedAt = () => {
+            return tw.createdAt instanceof Date;
+        };
+
+        const validateAuthor = () => {
+            return typeof tw.author === 'string' && tw.author !== '';
+        };
+
+        const validateComment = () => {
+            return Array.isArray(tw.comments);
+        };
+
+        const tweetsValid = validateKey()
+            && validateId()
+            && validateText()
+            && validateCreatedAt()
+            && validateAuthor()
+            && validateComment();
+
+        return tweetsValid;
+    }
+}
+
+// const tweet1 = new Tweet(tweets[0]);
+
+// console.log(Tweet.validate(tweet1));
+// console.log(tweet1);
+
 class TweetFeed {
     constructor() {
         this.tweets = [];
     }
 
-    _user = 'Kirill Borisyonok';
+    _user = 'guest';
 
     get user() {
         return this._user;
     }
 
+    set user(user) {
+        this._user = user;
+    }
+
     addAll(tws) {
-        let twsTweet = [];
-        for (let tweet of tws) {
-            twsTweet.push(new Tweet(tweet));
-        }
+        let twsTweet = tws.map(tweet => new Tweet(tweet));
 
         let tweetsNotValid = twsTweet.filter(tweet => !Tweet.validate(tweet));
         let tweetsValid = twsTweet.filter(tweet => Tweet.validate(tweet));
 
-        for (let item of tweetsValid) {
-            let tweet = new Tweet(item);
-            this.tweets.push(tweet);
-        }
+        this.tweets = this.tweets.concat(tweetsValid);
 
         return tweetsNotValid;
     }
@@ -366,38 +348,38 @@ class TweetFeed {
         this.tweets = [];
     }
 
-    getPage(skip = 0, top = 10, filterConfig) {
+    getPage(skip = 0, top = 10, filterConfig = {}) {
         let filterTweetsArr = this.tweets.slice();
 
         // сработает в случае наличия filterConfig
         if (filterConfig) {
             let count = 0;
             // фильтрация по имени автора
-            if (filterConfig.hasOwnProperty('author')) {
+            if ('author' in filterConfig) {
                 count += 1;
-                filterTweetsArr = filterTweetsArr.filter(item => item._author.toLowerCase().includes(filterConfig._author.toLowerCase()));
+                filterTweetsArr = filterTweetsArr.filter(item => item.author.toLowerCase().includes(filterConfig.author.toLowerCase()));
             }
 
             // фильтрация по тексту
-            if (filterConfig.hasOwnProperty('text')) {
+            if ('text' in filterConfig) {
                 count += 1;
                 filterTweetsArr = filterTweetsArr.filter(item => item.text.toLowerCase().includes(filterConfig.text.toLowerCase()));
             }
 
             // фильтрация по дате
-            if (filterConfig.hasOwnProperty('dateFrom') && filterConfig.hasOwnProperty('dateTo')) {
+            if ('dateFrom' in filterConfig && 'dateTo' in filterConfig) {
                 count += 1;
-                filterTweetsArr = filterTweetsArr.filter(item => (filterConfig.dateFrom <= item._createdAt && item._createdAt <= filterConfig.dateTo));
-            } else if (filterConfig.hasOwnProperty('dateFrom')) {
+                filterTweetsArr = filterTweetsArr.filter(item => (filterConfig.dateFrom <= item.createdAt && item.createdAt <= filterConfig.dateTo));
+            } else if ('dateFrom' in filterConfig) {
                 count += 1;
-                filterTweetsArr = filterTweetsArr.filter(item => filterConfig.dateFrom <= item._createdAt);
-            } else if (filterConfig.hasOwnProperty('dateTo')) {
+                filterTweetsArr = filterTweetsArr.filter(item => filterConfig.dateFrom <= item.createdAt);
+            } else if ('dateTo' in filterConfig) {
                 count += 1;
-                filterTweetsArr = filterTweetsArr.filter(item => item._createdAt <= filterConfig.dateTo);
+                filterTweetsArr = filterTweetsArr.filter(item => item.createdAt <= filterConfig.dateTo);
             }
 
             // фильтрация по хештегам
-            if (filterConfig.hasOwnProperty('hashtags')) {
+            if ('hashtags' in filterConfig) {
                 count += 1;
                 let hashtagsArr = filterConfig.hashtags;
                 for (let hashtagsItem of hashtagsArr) {
@@ -415,90 +397,94 @@ class TweetFeed {
     }
 
     get(id) {
-        return this.tweets.find(item => item._id === id) ?? 'Твит с таким id не найден';
+        return this.tweets.find(item => item.id === id);
     }
 
     add(text) {
-        if (this._user) {
-            let tweet = {};
-            let id = `${Math.round(0 + Math.random() * (10000000000000 - 0))}`;
-
-            tweet.id = id;
-            tweet.text = text;
-            tweet.createdAt = new Date();
-            tweet.author = this._user;
-            tweet.comments = [];
-
-            if (Tweet.validate(new Tweet(tweet))) {
-                this.tweets.push(new Tweet(tweet));
-                return true;
-            }
+        if (!this.user || this.user === 'guest') {
             return false;
         }
-        return 'Пользователь не определен';
-    }
+        let tweet = {};
+        let id = `${Math.round(0 + Math.random() * (10000000000000 - 0))}`;
 
-    edit(idTweet, text) {
-        let tweetEdit = this.get(idTweet);
+        tweet.id = id;
+        tweet.text = text;
+        tweet.createdAt = new Date();
+        tweet.author = this.user;
+        tweet.comments = [];
 
-        if (tweetEdit._author === this._user) {
-            if (typeof text === 'string' && text !== '' && text.length < Tweet.maxTextTweetLength) {
-                tweetEdit.text = text;
-                return true;
-            }
-            return false;
-        }
-        return 'гость либо это не Ваш твит';
-    }
-
-    remove(idTweetDelete) {
-        let tweetDelete = this.get(idTweetDelete);
-
-        let tweetDeleteIndex = this.tweets.findIndex(item => item._id === idTweetDelete);
-
-        if (tweetDelete._author === this._user) {
-            this.tweets.splice(tweetDeleteIndex, 1);
+        if (Tweet.validate(new Tweet(tweet))) {
+            this.tweets.push(new Tweet(tweet));
             return true;
         }
         return false;
     }
 
-    addComment(idTweet, text) {
-        if (this._user) {
-            let tweetAddComment = this.get(idTweet);
-            let comment = {};
+    edit(idTweet, text) {
+        let tweetEdit = this.get(idTweet);
 
-            let idCommentsGen = `${Math.round(0 + Math.random() * (100000000000 - 0))}`;
-
-            comment.id = idCommentsGen;
-            comment.text = text;
-            comment.createdAt = new Date();
-            comment.author = this._user;
-
-            if (Comment.validate(comment)) {
-                tweetAddComment.comments.push(new Comment(comment));
-                return true;
-            }
+        if (!tweetEdit || tweetEdit.author !== this.user) {
             return false;
         }
-        return 'Log in';
+
+        if (typeof text === 'string' && text !== '' && text.length < Tweet.maxTextTweetLength) {
+            tweetEdit.text = text;
+            return true;
+        }
+        return false;
+    }
+
+    remove(idTweetDelete) {
+        let tweetDelete = this.get(idTweetDelete);
+
+        if (!tweetDelete || tweetDelete.author !== this.user) {
+            return false;
+        }
+
+        let tweetDeleteIndex = this.tweets.findIndex(item => item.id === idTweetDelete);
+
+        this.tweets.splice(tweetDeleteIndex, 1);
+        return true;
+    }
+
+    addComment(idTweet, text) {
+        if (!this.user || this.user === 'guest') {
+            return false;
+        }
+        let tweetAddComment = this.get(idTweet);
+        let comment = {};
+
+        let idCommentsGen = `${Math.round(0 + Math.random() * (100000000000 - 0))}`;
+
+        comment.id = idCommentsGen;
+        comment.text = text;
+        comment.createdAt = new Date();
+        comment.author = this.user;
+
+        if (Comment.validate(comment)) {
+            tweetAddComment.comments.push(new Comment(comment));
+            return true;
+        }
+        return false;
     }
 }
 
 let tweetFeed = new TweetFeed();
 
+tweetFeed.user = 'Kirill Borisyonok';
 tweetFeed.addAll(tweets);
 // console.log(tweetFeed.add('asd'));
 
 // console.log(tweetFeed.edit('5', '123'));
 // console.log(tweetFeed.remove('3'));
 
-// console.log(tweetFeed.addComment('2', 'asdsadasd'));
+// console.log(tweetFeed.addComment('2', '1'));
 
 // console.log(tweetFeed.getPage(0, 10, { hashtags: ['#js'] }));
+// console.log(tweetFeed.getPage(0, 10, { text: 'Привет' }));
 
 // tweetFeed.clear();
 
-// console.log(tweetFeed.get('1'));
+// console.log(tweetFeed.get('20'));
 
-console.log(tweetFeed);
+// console.log(tweetFeed);
