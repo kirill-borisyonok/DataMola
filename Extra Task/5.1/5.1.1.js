@@ -61,19 +61,17 @@ class List {
         let count = 0;
         let beforeNodeToDelete = null;
         let nodeToDelete = null;
-        let deletedNode = null;
 
-        if (position < 0 || position > length || current.next == null) {
+        if (position < 0 || position > length - 1 || current.next == null) {
             return false;
         }
 
         if (position === 0) {
             this.root = current.next;
-            deletedNode = current;
             current = null;
             this.length -= 1;
 
-            return deletedNode;
+            return true;
         }
 
         while (count < position) {
@@ -84,11 +82,10 @@ class List {
         }
 
         beforeNodeToDelete.next = nodeToDelete.next;
-        deletedNode = nodeToDelete;
         nodeToDelete = null;
         this.length -= 1;
 
-        return deletedNode;
+        return true;
     }
 
     print() {
@@ -114,13 +111,17 @@ list.addNode(6, 0);
 list.addNode(7);
 // list.addNode(6, 10);
 
-list.removeNode();
-list.removeNode();
-list.removeNode(3);
-list.removeNode();
-list.removeNode(2);
-list.removeNode();
-list.removeNode();
+list.removeNode(1);
+list.removeNode(1);
+list.removeNode(5);
+// list.removeNode();
+// list.removeNode(2);
+// list.removeNode(2);
+// list.removeNode(1);
+// list.removeNode(0);
+
+// list.removeNode();
+// list.removeNode();
 
 console.log(list.print());
 
