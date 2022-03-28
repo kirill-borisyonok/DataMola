@@ -21,7 +21,7 @@ class List {
         this._length = length;
     }
 
-    addNode(data, position) {
+    addNode(data, position = this.length) {
         let count = 0;
 
         if (position < 0 || position > this.length) {
@@ -55,7 +55,7 @@ class List {
         return true;
     }
 
-    removeNode(position) {
+    removeNode(position = this.length - 1) {
         let current = this.root;
         let length = this.length;
         let count = 0;
@@ -63,7 +63,7 @@ class List {
         let nodeToDelete = null;
         let deletedNode = null;
 
-        if (position < 0 || position > length) {
+        if (position < 0 || position > length || current.next == null) {
             return false;
         }
 
@@ -106,20 +106,21 @@ class List {
 
 let list = new List(1);
 
-list.addNode(2, 0);
-list.addNode(3, 1);
+list.addNode(2);
+list.addNode(3);
 list.addNode(4, 0);
 list.addNode(5, 1);
 list.addNode(6, 0);
-list.addNode(7, 4);
+list.addNode(7);
+// list.addNode(6, 10);
 
-list.addNode(6, 10);
-
-// list.removeNode(1);
-// list.removeNode(2);
-// list.removeNode(3);
-// list.removeNode(7);
-// list.removeNode(5);
+list.removeNode();
+list.removeNode();
+list.removeNode(3);
+list.removeNode();
+list.removeNode(2);
+list.removeNode();
+list.removeNode();
 
 console.log(list.print());
 
