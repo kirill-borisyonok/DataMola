@@ -313,11 +313,6 @@ class Tweet {
     }
 }
 
-// const tweet1 = new Tweet(tweets[0]);
-
-// console.log(Tweet.validate(tweet1));
-// console.log(tweet1);
-
 class TweetFeed {
     constructor() {
         this.tweets = [];
@@ -330,7 +325,7 @@ class TweetFeed {
     }
 
     set user(user) {
-        this._user = user;
+        this._user = `${user}`;
     }
 
     addAll(tws) {
@@ -469,26 +464,6 @@ class TweetFeed {
     }
 }
 
-let tweetFeed = new TweetFeed();
-
-tweetFeed.user = 'Kirill Borisyonok';
-tweetFeed.addAll(tweets);
-// console.log(tweetFeed.add('asd'));
-
-// console.log(tweetFeed.edit('5', '123'));
-// console.log(tweetFeed.remove('3'));
-
-// console.log(tweetFeed.addComment('2', '1'));
-
-// console.log(tweetFeed.getPage(0, 10, { hashtags: ['#js'] }));
-// console.log(tweetFeed.getPage(0, 10, { text: 'Привет' }));
-
-// tweetFeed.clear();
-
-// console.log(tweetFeed.get('20'));
-
-// console.log(tweetFeed);
-
 class HeaderView {
     constructor(containerId) {
         this.containerId = document.getElementById(containerId);
@@ -498,9 +473,6 @@ class HeaderView {
         this.containerId.textContent = user;
     }
 }
-
-// let user = new HeaderView('userName');
-// user.display('Петр Петров');
 
 class TweetFeedView {
     constructor(containerId) {
@@ -568,9 +540,6 @@ class TweetFeedView {
         this.containerId.innerHTML = `${tweetsItems}`;
     }
 }
-
-// let tweetsFeed = new TweetFeedView('tweetsTape');
-// tweetsFeed.display(tweets);
 
 class TweetView {
     constructor(containerId) {
@@ -667,9 +636,6 @@ class TweetView {
     }
 }
 
-// let tweet = new TweetView('tweetsContainer');
-// tweet.display(tweets[19]);
-
 class FilterView {
     constructor(containerId) {
         this.containerId = document.getElementById(containerId);
@@ -678,75 +644,121 @@ class FilterView {
     display(tweetsArr) {
         let authorArr = tweetsArr.map(item => item.author);
         authorArr = Array.from(new Set(authorArr));
-        console.log(authorArr);
         this.containerId.insertAdjacentHTML('afterend', `<datalist id="dataLIst">
         ${authorArr.map(item => `<option value="${item}"></option>`).join('\n')}</datalist>`);
     }
 }
 
-// let filterView = new FilterView('filterAuthor');
-// console.log(filterView.display(tweets));
+const tweetsCollection = new TweetFeed();
+tweetsCollection.addAll(tweets);
+
+const userHead = new HeaderView('userName');
+const tweetsFeed = new TweetFeedView('tweetsTape');
 
 function setCurrentUser(user) {
-    let tweetFeeds = new TweetFeed();
-    tweetFeeds.user = user;
-    let userHead = new HeaderView('userName');
-    userHead.display(user);
+    if (user && typeof user === 'string') {
+        tweetsCollection.user = user;
+        userHead.display(user);
+    }
 }
-
-// setCurrentUser('Kirill');
 
 function addTweet(text) {
-    let tweetArr = new TweetFeed();
-    tweetArr.addAll(tweets);
-    tweetArr.user = 'Kirill';
-    tweetArr.add(text);
-    let tweetsFeed = new TweetFeedView('tweetsTape');
-    tweetsFeed.display(tweetArr.tweets);
+    if (tweetsCollection.add(text)) {
+        tweetsFeed.display(tweetsCollection.tweets);
+    }
 }
-
-// addTweet('123');
 
 function editTweet(id, text) {
-    let tweetArr = new TweetFeed();
-    tweetArr.addAll(tweets);
-    tweetArr.user = 'Петров Петр';
-    tweetArr.edit(id, text);
-    let tweetsFeed = new TweetFeedView('tweetsTape');
-    tweetsFeed.display(tweetArr.tweets);
+    if (tweetsCollection.edit(id, text)) {
+        tweetsFeed.display(tweetsCollection.tweets);
+    }
 }
-
-// editTweet('2', 'text');
 
 function removeTweet(id) {
-    let tweetArr = new TweetFeed();
-    tweetArr.addAll(tweets);
-    tweetArr.user = 'Петров Петр';
-    tweetArr.remove(id);
-    let tweetsFeed = new TweetFeedView('tweetsTape');
-    tweetsFeed.display(tweetArr.tweets);
+    if (tweetsCollection.remove(id)) {
+        tweetsFeed.display(tweetsCollection.tweets);
+    }
 }
 
-// removeTweet('4')
-
 function getFeed(skip = 0, top = 10, filterConfig = {}) {
-    let tweetArr = new TweetFeed();
-    tweetArr.addAll(tweets);
-    tweetArr.user = 'Петров Петр';
-    let tweetFilter = tweetArr.getPage(skip, top, filterConfig);
-    let tweetsFeed = new TweetFeedView('tweetsTape');
+    const tweetFilter = tweetsCollection.getPage(skip, top, filterConfig);
     tweetsFeed.display(tweetFilter);
 }
 
-// getFeed(0, 5);
-
 function showTweet(id) {
-    let tweetArr = new TweetFeed();
-    tweetArr.addAll(tweets);
-    tweetArr.user = 'Петров Петр';
-    let tweetGet = tweetArr.get(id);
-    let tweet = new TweetView('tweetsContainer');
-    tweet.display(tweetGet);
+    if (id) {
+        const tweetGet = tweetsCollection.get(id);
+        if (tweetGet) {
+            const tweet = new TweetView('tweetsContainer');
+            tweet.display(tweetGet);
+        }
+    }
 }
 
+// setCurrentUser('Kirill Borisyonok');
+// console.log(tweetsCollection);
+// setCurrentUser();
+// console.log(tweetsCollection);
+// setCurrentUser('Nick');
+// console.log(tweetsCollection);
+// setCurrentUser('Mike>');
+// console.log(tweetsCollection);
+// setCurrentUser('Tough');
+// console.log(tweetsCollection);
+// setCurrentUser('Nut');
+// console.log(tweetsCollection);
+
+// addTweet('1');
+// console.log(tweetsCollection);
+// addTweet('2');
+// console.log(tweetsCollection);
+// addTweet('3');
+// console.log(tweetsCollection);
+// addTweet('4');
+// console.log(tweetsCollection);
+// addTweet('5');
+// console.log(tweetsCollection);
+
+// editTweet('1', 'text');
+// console.log(tweetsCollection);
+// editTweet('3', 'text');
+// console.log(tweetsCollection);
+// editTweet('5', 'text');
+// console.log(tweetsCollection);
+// editTweet('7', 'text');
+// console.log(tweetsCollection);
+// editTweet('1', '1');
+// console.log(tweetsCollection);
+
+// removeTweet('1');
+// console.log(tweetsCollection);
+// removeTweet('3');
+// console.log(tweetsCollection);
+// removeTweet('5');
+// console.log(tweetsCollection);
+// removeTweet('7');
+// console.log(tweetsCollection);
+// removeTweet('9');
+// console.log(tweetsCollection);
+// removeTweet('11');
+// console.log(tweetsCollection);
+// removeTweet('13');
+// console.log(tweetsCollection);
+// removeTweet('15');
+// console.log(tweetsCollection);
+// removeTweet('17');
+// console.log(tweetsCollection);
+// removeTweet('19');
+// console.log(tweetsCollection);
+// removeTweet('2');
+// console.log(tweetsCollection);
+
+// getFeed(0, 10);
+// getFeed(0, 10, { author: 'Петров Петр', hashtags: ['#js'], text: 'какие' });
+
+// showTweet('123');
 // showTweet('2');
+// showTweet('3');
+// showTweet('4');
+// showTweet('5');
+// showTweet('5222');
