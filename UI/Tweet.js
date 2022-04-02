@@ -654,6 +654,8 @@ tweetsCollection.addAll(tweets);
 
 const userHead = new HeaderView('userName');
 const tweetsFeed = new TweetFeedView('tweetsTape');
+const tweet = new TweetView('tweetsTape');
+
 
 function setCurrentUser(user) {
     if (user && typeof user === 'string') {
@@ -689,7 +691,6 @@ function showTweet(id) {
     if (id) {
         const tweetGet = tweetsCollection.get(id);
         if (tweetGet) {
-            const tweet = new TweetView('tweetsContainer');
             tweet.display(tweetGet);
         }
     }
@@ -753,11 +754,11 @@ function showTweet(id) {
 // removeTweet('2');
 // console.log(tweetsCollection);
 
+// showTweet('2');
 // getFeed(0, 10);
 // getFeed(0, 10, { author: 'Петров Петр', hashtags: ['#js'], text: 'какие' });
 
 // showTweet('123');
-// showTweet('2');
 // showTweet('3');
 // showTweet('4');
 // showTweet('5');
