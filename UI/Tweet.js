@@ -313,11 +313,6 @@ class Tweet {
     }
 }
 
-// const tweet1 = new Tweet(tweets[0]);
-
-// console.log(Tweet.validate(tweet1));
-// console.log(tweet1);
-
 class TweetFeed {
     constructor() {
         this.tweets = [];
@@ -330,7 +325,7 @@ class TweetFeed {
     }
 
     set user(user) {
-        this._user = user;
+        this._user = `${user}`;
     }
 
     addAll(tws) {
@@ -352,7 +347,7 @@ class TweetFeed {
         let filterTweetsArr = this.tweets.slice();
 
         // сработает в случае наличия filterConfig
-        if (filterConfig) {
+        if (Object.keys(filterConfig).length !== 0) {
             let count = 0;
             // фильтрация по имени автора
             if ('author' in filterConfig) {
@@ -469,22 +464,302 @@ class TweetFeed {
     }
 }
 
-let tweetFeed = new TweetFeed();
+class HeaderView {
+    constructor(containerId) {
+        this.containerId = document.getElementById(containerId);
+    }
 
-tweetFeed.user = 'Kirill Borisyonok';
-tweetFeed.addAll(tweets);
-// console.log(tweetFeed.add('asd'));
+    display(user) {
+        this.containerId.textContent = user;
+    }
+}
 
-// console.log(tweetFeed.edit('5', '123'));
-// console.log(tweetFeed.remove('3'));
+class TweetFeedView {
+    constructor(containerId) {
+        this.containerId = document.getElementById(containerId);
+    }
 
-// console.log(tweetFeed.addComment('2', '1'));
+    display(tweetsArr) {
+        const date = (date) => {
+            const month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            let dateGood = `${date.getDate()} ${month[date.getMonth()]} ${date.getFullYear()}`;
+            return dateGood;
+        };
 
-// console.log(tweetFeed.getPage(0, 10, { hashtags: ['#js'] }));
-// console.log(tweetFeed.getPage(0, 10, { text: 'Привет' }));
+        const time = (time) => {
+            let hoursGood = `${time.getHours()}`;
+            if (hoursGood.length === 1) {
+                hoursGood = `0${hoursGood}`;
+            }
 
-// tweetFeed.clear();
+            let minutesGood = `${time.getMinutes()}`;
+            if (minutesGood.length === 1) {
+                minutesGood = `0${minutesGood}`;
+            }
 
-// console.log(tweetFeed.get('20'));
+            let timeGood = `${hoursGood}:${minutesGood}`;
+            return timeGood;
+        };
 
-// console.log(tweetFeed);
+        const textGood = (text) => {
+            text = text.split(' ')
+                .map(item => {
+                    if (item[0] === '#') return `<span class="tweets__tags">${item}</span>`;
+                    return item;
+                })
+                .join(' ');
+            return text;
+        };
+
+        const tweetsItems = tweetsArr.map(item => `<div id="${item.id}" class="tweets__item">
+                            <div class="tweets__item-inner">  
+                                <img class="tweets__item-img" src="images/my_photo.png" alt="user photo">
+                                
+                                <div class="tweets__item-content">
+                                    <div class="tweets__item-title">
+                                        <a class="tweets__item-author" href="#">${item.author}</a>
+                                        <time pubdate class="tweets__item-date"><span class="dot">&#149</span> ${date(item.createdAt)} <b>${time(item.createdAt)}</b></time>
+                                    </div>
+                                    <div class="tweets__text">${textGood(item.text)}</div>
+                                </div> 
+                            </div>
+                            <div class="tweets__item-footer">
+                                <div class="comments">
+                                    <svg class="comments__img">
+                                        <use xlink:href="#message"></use>
+                                    </svg>
+                                    <div class="comments__text">${item.comments.length}</div>
+                                </div>
+                                <div class="tweets__item-footer-button">
+                                    <button class="btn--sml btn--white" type="button">Delete</button>
+                                    <button class="btn btn--sml" type="button">Edit</button>
+                                </div>
+                            </div>
+                        </div>`).join('\n');
+
+        this.containerId.innerHTML = `${tweetsItems}`;
+    }
+}
+
+class TweetView {
+    constructor(containerId) {
+        this.containerId = document.getElementById(containerId);
+    }
+
+    display(tweet) {
+        let date = (date) => {
+            const month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            let dateGood = `${date.getDate()} ${month[date.getMonth()]} ${date.getFullYear()}`;
+            return dateGood;
+        };
+
+        let time = (time) => {
+            let hoursGood = `${time.getHours()}`;
+            if (hoursGood.length === 1) {
+                hoursGood = `0${hoursGood}`;
+            }
+
+            let minutesGood = `${time.getMinutes()}`;
+            if (minutesGood.length === 1) {
+                minutesGood = `0${minutesGood}`;
+            }
+
+            let timeGood = `${hoursGood}:${minutesGood}`;
+            return timeGood;
+        };
+
+        let textGood = (text) => {
+            text = text.split(' ')
+                .map(item => {
+                    if (item[0] === '#') return `<span class="tweets__tags">${item}</span>`;
+                    return item;
+                })
+                .join(' ');
+            return text;
+        };
+
+        const tweetItem = `<div id="${tweet.id}" class="tweets__item tweets__item--page">
+                <div class="tweets__item-inner">  
+                <img class="tweets__item-img" src="images/my_photo.png" alt="user photo">
+            
+                <div class="tweets__tape-item-content">
+                    <div class="tweets__item-title">
+                        <a class="tweets__item-author" href="#">Kirill Borisyonok</a>
+                        <time pubdate class="tweets__item-date"><span class="dot">&#149</span> ${date(tweet.createdAt)} <b>${time(tweet.createdAt)}</b></time>
+                    </div>
+                    <div class="tweets__text">${textGood(tweet.text)}</div>
+                </div> 
+                </div>
+                <div class="tweets__item-footer">
+                    <div class="comments">
+                        <svg class="comments__img">
+                            <use xlink:href="#message"></use>
+                        </svg>
+                        <div class="comments__text">${tweet.comments.length}</div>
+                    </div>
+                    <div class="tweets__item-footer-button">
+                        <button class="btn--sml btn--white" type="button">Delete</button>
+                        <button class="btn btn--sml" type="button">Edit</button>
+                    </div>
+                </div>
+            </div>`;
+
+        const comments = tweet.comments.map(comment => `<div id="${comment.id}" class="comment__item">
+                <div class="comment__item-inner">  
+                    <img class="comment__item-img" src="images/my_photo.png" alt="user photo">
+                        
+                    <div class="comment__item-content">
+                        <div class="comment__item-title">
+                            <a class="comment__item-author" href="#">${comment.author}</a>
+                            <time pubdate class="comment__item-date">${date(comment.createdAt)} <b>${time(comment.createdAt)}</b></time>
+                        </div>
+                        <div class="comment__text">${textGood(comment.text)}))</div>
+                    </div> 
+                </div>
+            </div>`);
+
+        this.containerId.innerHTML = `${tweetItem}\n
+                <div class="comment-title">Comments</div>\n
+                ${comments}\n
+                <div class="comment__set">
+                <div class="comment__set-inner">
+                    <img class="comment__set-photo" src="images/my_photo.png" alt="user photo">
+                    <form class="comment__set-form" action="/" method="post">
+                        <textarea class="comment__set-form-input" type="text" maxlength="280" placeholder="Enter your comment"></textarea>
+                        <div class="comment__set-form-button">
+                            <button type="submit" class="btn--submit" href="#">Add</button>
+                        </div> 
+                    </form>
+                </div> <!-- /.comment__set -->
+                
+            </div> `;
+    }
+}
+
+class FilterView {
+    constructor(containerId) {
+        this.containerId = document.getElementById(containerId);
+    }
+
+    display(tweetsArr) {
+        let authorArr = tweetsArr.map(item => item.author);
+        authorArr = Array.from(new Set(authorArr));
+        this.containerId.insertAdjacentHTML('afterend', `<datalist id="dataLIst">
+        ${authorArr.map(item => `<option value="${item}"></option>`).join('\n')}</datalist>`);
+    }
+}
+
+const tweetsCollection = new TweetFeed();
+tweetsCollection.addAll(tweets);
+
+const userHead = new HeaderView('userName');
+const tweetsFeed = new TweetFeedView('tweetsTape');
+const tweet = new TweetView('tweetsTape');
+
+
+function setCurrentUser(user) {
+    if (user && typeof user === 'string') {
+        tweetsCollection.user = user;
+        userHead.display(user);
+    }
+}
+
+function addTweet(text) {
+    if (tweetsCollection.add(text)) {
+        tweetsFeed.display(tweetsCollection.tweets);
+    }
+}
+
+function editTweet(id, text) {
+    if (tweetsCollection.edit(id, text)) {
+        tweetsFeed.display(tweetsCollection.tweets);
+    }
+}
+
+function removeTweet(id) {
+    if (tweetsCollection.remove(id)) {
+        tweetsFeed.display(tweetsCollection.tweets);
+    }
+}
+
+function getFeed(skip = 0, top = 10, filterConfig = {}) {
+    const tweetFilter = tweetsCollection.getPage(skip, top, filterConfig);
+    tweetsFeed.display(tweetFilter);
+}
+
+function showTweet(id) {
+    if (id) {
+        const tweetGet = tweetsCollection.get(id);
+        if (tweetGet) {
+            tweet.display(tweetGet);
+        }
+    }
+}
+
+// setCurrentUser('Kirill Borisyonok');
+// console.log(tweetsCollection);
+// setCurrentUser();
+// console.log(tweetsCollection);
+// setCurrentUser('Nick');
+// console.log(tweetsCollection);
+// setCurrentUser('Mike>');
+// console.log(tweetsCollection);
+// setCurrentUser('Tough');
+// console.log(tweetsCollection);
+// setCurrentUser('Nut');
+// console.log(tweetsCollection);
+
+// addTweet('1');
+// console.log(tweetsCollection);
+// addTweet('2');
+// console.log(tweetsCollection);
+// addTweet('3');
+// console.log(tweetsCollection);
+// addTweet('4');
+// console.log(tweetsCollection);
+// addTweet('5');
+// console.log(tweetsCollection);
+
+// editTweet('1', 'text');
+// console.log(tweetsCollection);
+// editTweet('3', 'text');
+// console.log(tweetsCollection);
+// editTweet('5', 'text');
+// console.log(tweetsCollection);
+// editTweet('7', 'text');
+// console.log(tweetsCollection);
+// editTweet('1', '1');
+// console.log(tweetsCollection);
+
+// removeTweet('1');
+// console.log(tweetsCollection);
+// removeTweet('3');
+// console.log(tweetsCollection);
+// removeTweet('5');
+// console.log(tweetsCollection);
+// removeTweet('7');
+// console.log(tweetsCollection);
+// removeTweet('9');
+// console.log(tweetsCollection);
+// removeTweet('11');
+// console.log(tweetsCollection);
+// removeTweet('13');
+// console.log(tweetsCollection);
+// removeTweet('15');
+// console.log(tweetsCollection);
+// removeTweet('17');
+// console.log(tweetsCollection);
+// removeTweet('19');
+// console.log(tweetsCollection);
+// removeTweet('2');
+// console.log(tweetsCollection);
+
+// showTweet('2');
+// getFeed(0, 10);
+// getFeed(0, 10, { author: 'Петров Петр', hashtags: ['#js'], text: 'какие' });
+
+// showTweet('123');
+// showTweet('3');
+// showTweet('4');
+// showTweet('5');
+// showTweet('5222');
