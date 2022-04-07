@@ -24,27 +24,27 @@
     <!--Header-->
     <header class="header">
         <div class="container">
-            <div class="header__inner">
+            <div id="headerInner" class="header__inner">
 
-                <a class="header__logo" href="#">
+                <a id="headerLogo" class="header__logo" href="#">
                     <img class="header__logo-img" src="images/logo.svg" alt="logo">
                 </a>
 
-                <a class="header__text" href="#">Home</a>
+                <a id="headerText" class="header__text" href="#">Home</a>
 
 
                 <div class="header__client">
 
-                    <a class="btn hide" href="#">log in</a>
+
 
                     <div class="header__client-user">
-                        <div class="header__client-user-name">
+                        <div id="headerClient" class="header__client-user-name">
                             <img class="header__client-user-photo" src="images/my_photo.png" alt="user photo">
                             <div id="userName" class="header__client-user-text">guest</div>
                         </div>
-                        <a href="#" class="btn">
+                        <a id="buttonHeader" href="#" class="btn">
                             <img class="btn__img" src="images/door.svg" alt="door">
-                            <span class="btn__text">log out</span>
+                            <span class="btn__text">log in</span>
                         </a>
 
                         <a href="#" class="header__btn-img">
@@ -62,18 +62,18 @@
     </header> <!-- /.header-->
 
     <!-- Tweets -->
-    <main class="tweets">
+    <main id="tweetsMain" class="tweets">
         <div id="tweetsContainer" class="container">
             <div class="tweets__inner">
                 <div class="tweets__left">
-                    <div class="tweets__set">
+                    <div id="tweetsSet" class="tweets__set">
                         <div class="tweets__set-inner">
                             <img class="tweets__set-photo" src="images/my_photo.png" alt="user photo">
-                            <form class="tweets__set-form" action="/" method="post">
-                                <textarea class="tweets__set-form-input" type="text" maxlength="280"
+                            <form name="formSet" class="tweets__set-form" action="/" method="post">
+                                <textarea id="formSetInput" class="tweets__set-form-input" type="text" maxlength="280"
                                     placeholder="What's happening?"></textarea>
                                 <div class="tweets__set-form-button">
-                                    <button type="submit" class="btn--submit" href="#">Tell</a>
+                                    <input id="formSetBtn" type="submit" class="btn--submit" href="#" value="Tell">
                                 </div>
                             </form>
                         </div>
@@ -82,9 +82,7 @@
 
                     <div id="tweetsTape" class="tweets__tape">
 
-                        <div class="button__tweets-footer">
-                            <button class="btn btn--load">load more</button>
-                        </div>
+
 
                     </div> <!-- /.tweets__tape -->
                     <footer class="footer">
@@ -103,11 +101,11 @@
                     </footer>
                 </div> <!-- /.tweets__left -->
 
-                <div class="tweets__right">
+                <div id="tweetsRight" class="tweets__right">
                     <div class="tweets__filter">
                         <div class="tweets__filter-inner">
                             <h2 class="tweets__filter-title">Filter</h2>
-                            <form class="filter__form" action="/" method="post">
+                            <form name="formFilter" class="filter__form" action="/" method="post">
                                 <div class="filter__form-item">
                                     <label class="filter__input-title" for="filterAuthor">Search tweets by author
                                         name</label>
@@ -121,16 +119,17 @@
                                     <div class="filter__input-date-elem">
                                         <div class="filter__input-text">from</div>
                                         <div class="filter__input-datetime">
-                                            <input class="filter__input-date" id="filterDate" type="date">
-                                            <input class="filter__input-date" type="time">
+                                            <input id="filterDateFrom" class="filter__input-date" id="filterDate"
+                                                type="datetime-local">
+
                                         </div>
                                     </div>
 
                                     <div class="filter__input-date-elem">
                                         <div class="filter__input-text">to</div>
                                         <div class="filter__input-datetime">
-                                            <input class="filter__input-date" type="date">
-                                            <input class="filter__input-date" type="time">
+                                            <input id="filterDateTo" class="filter__input-date" type="datetime-local">
+
                                         </div>
                                     </div>
 
@@ -147,8 +146,10 @@
                                 </div>
 
                                 <div class="filter__footer">
-                                    <button class="btn btn--white btn--filter" type="button">clear</button>
-                                    <button class="btn btn--filter" type="submit">search</button>
+                                    <input id="resetForm" class="btn btn--white btn--filter" type="reset"
+                                        value="clear"></button>
+                                    <input id="searchForm" class="btn btn--filter" type="submit"
+                                        value="search"></button>
                                 </div>
                             </form>
 

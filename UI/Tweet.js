@@ -1,5 +1,20 @@
 'use strict';
 
+const usersArr = [
+    {
+        name: 'Kirill Borisyonok',
+        password: '123'
+    },
+    {
+        name: 'Anna',
+        password: '111'
+    },
+    {
+        name: 'Eugen',
+        password: '000'
+    }
+];
+
 const tweets = [
     {
         id: '1',
@@ -254,7 +269,7 @@ class Tweet {
     constructor(tweet) {
         this._id = tweet.id;
         this.text = tweet.text;
-        this._createdAt = tweet.createdAt;
+        this._createdAt = new Date(tweet.createdAt);
         this._author = tweet.author;
         this.comments = tweet.comments.map(item => new Comment(item));
     }
@@ -315,7 +330,7 @@ class Tweet {
 
 class TweetFeed {
     constructor() {
-        this.tweets = [];
+        this.tweets = TweetFeed.restore().map(tweet => new Tweet(tweet));
     }
 
     _user = 'guest';
@@ -328,6 +343,22 @@ class TweetFeed {
         this._user = `${user}`;
     }
 
+    static restore() {
+        return JSON.parse(localStorage.getItem('tweets'));
+    }
+
+    save() {
+        console.log(this.tweets)
+        const tweet = this.tweets.map(item => item = {
+            id: item.id,
+            text: item.text,
+            createdAt: item.createdAt,
+            author: item.author,
+            comments: item.comments.map(comment => new Comment(comment))
+        })
+        localStorage.setItem('tweets', JSON.stringify(tweet))
+    }
+
     addAll(tws) {
         let twsTweet = tws.map(tweet => new Tweet(tweet));
 
@@ -336,11 +367,15 @@ class TweetFeed {
 
         this.tweets = this.tweets.concat(tweetsValid);
 
+        this.save();
+
         return tweetsNotValid;
     }
 
     clear() {
         this.tweets = [];
+
+        this.save();
     }
 
     getPage(skip = 0, top = 10, filterConfig = {}) {
@@ -410,6 +445,9 @@ class TweetFeed {
 
         if (Tweet.validate(new Tweet(tweet))) {
             this.tweets.push(new Tweet(tweet));
+
+            this.save();
+
             return true;
         }
         return false;
@@ -424,6 +462,9 @@ class TweetFeed {
 
         if (typeof text === 'string' && text !== '' && text.length < Tweet.maxTextTweetLength) {
             tweetEdit.text = text;
+
+            this.save();
+
             return true;
         }
         return false;
@@ -439,6 +480,9 @@ class TweetFeed {
         let tweetDeleteIndex = this.tweets.findIndex(item => item.id === idTweetDelete);
 
         this.tweets.splice(tweetDeleteIndex, 1);
+
+        this.save();
+
         return true;
     }
 
@@ -458,9 +502,48 @@ class TweetFeed {
 
         if (Comment.validate(comment)) {
             tweetAddComment.comments.push(new Comment(comment));
+
+            this.save();
+
             return true;
         }
         return false;
+    }
+}
+
+class UserList {
+    constructor() {
+        this.users = UserList.restore();
+    }
+
+    static restore() {
+        return JSON.parse(localStorage.getItem('user'));
+    }
+
+    save() {
+        localStorage.setItem('user', JSON.stringify(this.users))
+    }
+
+    addUser(name, password) {
+        if (!name || typeof name !== 'string') {
+            return false;
+        }
+
+        if (!password || typeof password !== 'string') {
+            return false;
+        }
+
+        const usersName = this.users.map(item => item.name);
+
+        if (usersName.includes(name)) {
+            return false;
+        }
+
+        this.users.push({ name: name, password: password });
+
+        this.save();
+
+        return true;
     }
 }
 
@@ -470,7 +553,8 @@ class HeaderView {
     }
 
     display(user) {
-        this.containerId.textContent = user;
+        const userName = document.getElementById('userName');
+        userName.textContent = user;
     }
 }
 
@@ -479,7 +563,124 @@ class TweetFeedView {
         this.containerId = document.getElementById(containerId);
     }
 
-    display(tweetsArr) {
+    display(tweetsArr, user) {
+        const tweetsMain = document.getElementById('tweetsMain');
+        const headerArrow = document.getElementById('headerArrow');
+        const tweetsContainer = document.getElementById('tweetsContainer');
+        const buttonHeader = document.getElementById('buttonHeader');
+        const headerTextPage = document.getElementById('headerTextPage');
+        const tweetsSet = document.getElementById('tweetsSet');
+        const tweetsRight = document.getElementById('tweetsRight');
+
+        if (!tweetsContainer) {
+            tweetsMain.innerHTML = `<div id="tweetsContainer" class="container">
+            <div class="tweets__inner">
+                <div class="tweets__left">
+                    <div id="tweetsSet" class="tweets__set">
+                        <div class="tweets__set-inner">
+                            <img class="tweets__set-photo" src="images/my_photo.png" alt="user photo">
+                            <form name="formSet" class="tweets__set-form" action="/" method="post">
+                                <textarea id="formSetInput" class="tweets__set-form-input" type="text" maxlength="280"
+                                    placeholder="What's happening?"></textarea>
+                                <div class="tweets__set-form-button">
+                                    <input id="formSetBtn" type="submit" class="btn--submit" href="#" value="Tell">
+                                </div>
+                            </form>
+                        </div>
+
+                    </div> <!-- /.tweets__set -->
+
+                    <div id="tweetsTape" class="tweets__tape">
+
+                        
+
+                    </div> <!-- /.tweets__tape -->
+                    <footer class="footer">
+
+                        <div class="footer__item">Tale</div>
+                        <div class="footer__item">Kirill Borisyonok</div>
+                        <div class="footer__item">boravdv@mail.ru</div>
+                        <div class="footer__item">28 Feb 2022</div>
+
+                        <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path class="footer__img"
+                                d="M20 20L15.514 15.506L20 20ZM18 9.5C18 11.7543 17.1045 13.9163 15.5104 15.5104C13.9163 17.1045 11.7543 18 9.5 18C7.24566 18 5.08365 17.1045 3.48959 15.5104C1.89553 13.9163 1 11.7543 1 9.5C1 7.24566 1.89553 5.08365 3.48959 3.48959C5.08365 1.89553 7.24566 1 9.5 1C11.7543 1 13.9163 1.89553 15.5104 3.48959C17.1045 5.08365 18 7.24566 18 9.5V9.5Z"
+                                stroke="#858585" stroke-width="2" stroke-linecap="round" />
+                        </svg>
+
+                    </footer>
+                </div> <!-- /.tweets__left -->
+
+                <div id="tweetsRight" class="tweets__right">
+                    <div class="tweets__filter">
+                        <div class="tweets__filter-inner">
+                            <h2 class="tweets__filter-title">Filter</h2>
+                            <form name="formFilter" class="filter__form" action="/" method="post">
+                                <div class="filter__form-item">
+                                    <label class="filter__input-title" for="filterAuthor">Search tweets by author
+                                        name</label>
+                                    <input class="filter__input" id="filterAuthor" list="dataLIst" type="text"
+                                        placeholder="Select author">
+                                </div>
+
+                                <div class="filter__form-item">
+                                    <label class="filter__input-title" for="filterDate">Search tweets by date and
+                                        time</label>
+                                    <div class="filter__input-date-elem">
+                                        <div class="filter__input-text">from</div>
+                                        <div class="filter__input-datetime">
+                                            <input id="filterDateFrom" class="filter__input-date" id="filterDate" type="datetime-local">
+
+                                        </div>
+                                    </div>
+
+                                    <div class="filter__input-date-elem">
+                                        <div class="filter__input-text">to</div>
+                                        <div class="filter__input-datetime">
+                                            <input id="filterDateTo" class="filter__input-date" type="datetime-local">
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="filter__form-item">
+                                    <label class="filter__input-title" for="filterText">Search tweets by text</label>
+                                    <input class="filter__input" id="filterText" type="text" placeholder="Select text">
+                                </div>
+
+                                <div class="filter__form-item">
+                                    <label class="filter__input-title" for="filterTags">Search tweets by #tags</label>
+                                    <input class="filter__input" id="filterTags" type="text" placeholder="Select #tags">
+                                </div>
+
+                                <div class="filter__footer">
+                                    <input id="resetForm" class="btn btn--white btn--filter" type="reset" value="clear"></button>
+                                    <input id="searchForm" class="btn btn--filter" type="submit" value="search"></button>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div> <!-- /.tweets__filter  -->
+                </div> <!-- /.tweets__rigth  -->
+
+            </div> <!-- /.tweets__inner  -->
+        </div> <!-- /.container  -->`;
+
+            this.containerId = document.getElementById('tweetsTape');
+        }
+
+        if (headerArrow) {
+            headerArrow.remove();
+            headerTextPage.remove();
+            tweetsSet.classList.remove('hide');
+            tweetsRight.classList.remove('hide');
+        }
+
+        if (buttonHeader) {
+            buttonHeader.classList.remove('hide');
+        }
+
         const date = (date) => {
             const month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
             let dateGood = `${date.getDate()} ${month[date.getMonth()]} ${date.getFullYear()}`;
@@ -511,7 +712,35 @@ class TweetFeedView {
             return text;
         };
 
-        const tweetsItems = tweetsArr.map(item => `<div id="${item.id}" class="tweets__item">
+        const tweetsItems = tweetsArr.map(item => {
+            if (item.author === user) {
+                return `<section id="${item.id}" class="tweets__item">
+                <div class="tweets__item-inner">  
+                    <img class="tweets__item-img" src="images/my_photo.png" alt="user photo">
+                    
+                    <div class="tweets__item-content">
+                        <div class="tweets__item-title">
+                            <a class="tweets__item-author" href="#">${item.author}</a>
+                            <time pubdate class="tweets__item-date"><span class="dot">&#149</span> ${date(item.createdAt)} <b>${time(item.createdAt)}</b></time>
+                        </div>
+                        <div class="tweets__text">${textGood(item.text)}</div>
+                    </div> 
+                </div>
+                <div class="tweets__item-footer">
+                    <div class="comments">
+                        <svg class="comments__img">
+                            <use xlink:href="#message"></use>
+                        </svg>
+                        <div class="comments__text">${item.comments.length}</div>
+                    </div>
+                    <div class="tweets__item-footer-button">
+                        <button id="tweetDelete" class="btn--sml btn--white" type="button">Delete</button>
+                        <button id="tweetEdit" class="btn btn--sml" type="button">Edit</button>
+                    </div>
+                </div>
+            </section>`;
+            } else {
+                return `<section id="${item.id}" class="tweets__item">
                             <div class="tweets__item-inner">  
                                 <img class="tweets__item-img" src="images/my_photo.png" alt="user photo">
                                 
@@ -530,14 +759,15 @@ class TweetFeedView {
                                     </svg>
                                     <div class="comments__text">${item.comments.length}</div>
                                 </div>
-                                <div class="tweets__item-footer-button">
-                                    <button class="btn--sml btn--white" type="button">Delete</button>
-                                    <button class="btn btn--sml" type="button">Edit</button>
-                                </div>
                             </div>
-                        </div>`).join('\n');
+                        </section>`
+            }
+        }).join('\n');
 
-        this.containerId.innerHTML = `${tweetsItems}`;
+        this.containerId.innerHTML = `${tweetsItems}
+        <div id="loadMore" class="button__tweets-footer hide">
+        <button class="btn btn--load">load more</button>
+    </div>`;
     }
 }
 
@@ -546,20 +776,30 @@ class TweetView {
         this.containerId = document.getElementById(containerId);
     }
 
-    display(tweet) {
+    display(tweet, user) {
+        const headerText = document.getElementById('headerText');
+        const tweetsSet = document.getElementById('tweetsSet');
+        const tweetsRight = document.getElementById('tweetsRight');
+
+        headerText.insertAdjacentHTML('afterend', `
+        <img id="headerArrow" class="header__arrow" src="images/Arrow.svg" alt="">
+        <div id="headerTextPage" class="header__text--page-name">Tweet</div>`);
+        tweetsSet.classList.add('hide');
+        tweetsRight.classList.add('hide');
+
         let date = (date) => {
             const month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-            let dateGood = `${date.getDate()} ${month[date.getMonth()]} ${date.getFullYear()}`;
+            let dateGood = `${new Date(date).getDate()} ${month[new Date(date).getMonth()]} ${new Date(date).getFullYear()}`;
             return dateGood;
         };
 
         let time = (time) => {
-            let hoursGood = `${time.getHours()}`;
+            let hoursGood = `${new Date(time).getHours()}`;
             if (hoursGood.length === 1) {
                 hoursGood = `0${hoursGood}`;
             }
 
-            let minutesGood = `${time.getMinutes()}`;
+            let minutesGood = `${new Date(time).getMinutes()}`;
             if (minutesGood.length === 1) {
                 minutesGood = `0${minutesGood}`;
             }
@@ -578,13 +818,16 @@ class TweetView {
             return text;
         };
 
-        const tweetItem = `<div id="${tweet.id}" class="tweets__item tweets__item--page">
+        let tweetItem = '';
+
+        if (tweet.author == user) {
+            tweetItem = `<section id="${tweet.id}" class="tweets__item tweets__item--page">
                 <div class="tweets__item-inner">  
                 <img class="tweets__item-img" src="images/my_photo.png" alt="user photo">
             
                 <div class="tweets__tape-item-content">
                     <div class="tweets__item-title">
-                        <a class="tweets__item-author" href="#">Kirill Borisyonok</a>
+                        <a class="tweets__item-author" href="#">${tweet.author}</a>
                         <time pubdate class="tweets__item-date"><span class="dot">&#149</span> ${date(tweet.createdAt)} <b>${time(tweet.createdAt)}</b></time>
                     </div>
                     <div class="tweets__text">${textGood(tweet.text)}</div>
@@ -598,11 +841,34 @@ class TweetView {
                         <div class="comments__text">${tweet.comments.length}</div>
                     </div>
                     <div class="tweets__item-footer-button">
-                        <button class="btn--sml btn--white" type="button">Delete</button>
-                        <button class="btn btn--sml" type="button">Edit</button>
+                        <button id="tweetDelete" class="btn--sml btn--white" type="button">Delete</button>
+                        <button id="tweetEdit" class="btn btn--sml" type="button">Edit</button>
                     </div>
                 </div>
-            </div>`;
+            </section>`;
+        } else {
+            tweetItem = `<section id="${tweet.id}" class="tweets__item tweets__item--page">
+            <div class="tweets__item-inner">  
+            <img class="tweets__item-img" src="images/my_photo.png" alt="user photo">
+        
+            <div class="tweets__tape-item-content">
+                <div class="tweets__item-title">
+                    <a class="tweets__item-author" href="#">${tweet.author}</a>
+                    <time pubdate class="tweets__item-date"><span class="dot">&#149</span> ${date(tweet.createdAt)} <b>${time(tweet.createdAt)}</b></time>
+                </div>
+                <div class="tweets__text">${textGood(tweet.text)}</div>
+            </div> 
+            </div>
+            <div class="tweets__item-footer">
+                <div class="comments">
+                    <svg class="comments__img">
+                        <use xlink:href="#message"></use>
+                    </svg>
+                    <div class="comments__text">${tweet.comments.length}</div>
+                </div>
+            </div>
+        </section>`;
+        }
 
         const comments = tweet.comments.map(comment => `<div id="${comment.id}" class="comment__item">
                 <div class="comment__item-inner">  
@@ -618,6 +884,8 @@ class TweetView {
                 </div>
             </div>`);
 
+        this.containerId = document.getElementById('tweetsTape');
+
         this.containerId.innerHTML = `${tweetItem}\n
                 <div class="comment-title">Comments</div>\n
                 ${comments}\n
@@ -631,7 +899,6 @@ class TweetView {
                         </div> 
                     </form>
                 </div> <!-- /.comment__set -->
-                
             </div> `;
     }
 }
@@ -649,117 +916,428 @@ class FilterView {
     }
 }
 
-const tweetsCollection = new TweetFeed();
-tweetsCollection.addAll(tweets);
+class RegistrationView {
+    constructor(containerId) {
+        this.containerId = document.getElementById(containerId);
+    }
 
-const userHead = new HeaderView('userName');
-const tweetsFeed = new TweetFeedView('tweetsTape');
-const tweet = new TweetView('tweetsTape');
+    display(user) {
+        if (user || user === 'guest') {
+            return;
+        }
 
+        const buttonHeader = document.getElementById('buttonHeader');
 
-function setCurrentUser(user) {
-    if (user && typeof user === 'string') {
-        tweetsCollection.user = user;
-        userHead.display(user);
+        if (buttonHeader) {
+            buttonHeader.classList.add('hide');
+        }
+
+        const tweetsSet = document.getElementById('tweetsSet');
+        const tweetsRight = document.getElementById('tweetsRight');
+        const headerTextPage = document.getElementById('headerTextPage');
+        const headerArrow = document.getElementById('headerArrow');
+        const headerLogo = document.getElementById('headerLogo');
+
+        if (headerTextPage) {
+            headerTextPage.remove();
+            headerArrow.remove();
+        }
+
+        document.getElementById('headerText').remove();
+        headerLogo.insertAdjacentHTML('afterend', `<a id="headerText" class="header__text header__text--other-page" href="#">Home</a>
+        <img id="headerArrow" class="header__arrow" src="images/Arrow.svg" alt="">
+        <div id="headerTextPage" class="header__text--page-name">Sign up</div>`);
+
+        if (tweetsSet) {
+            tweetsSet.classList.add('hide');
+        }
+        if (tweetsRight) {
+            tweetsRight.classList.add('hide');
+        }
+
+        this.containerId.innerHTML = `<div class="sign-up__left">
+        <img src="images/sign up image.png" alt="image">
+    </div>
+    <div class="sign-up__rigth">
+        <div class="sign-up__form">
+            <div class="sign-up__form-title">Tell the world your
+                interesting story</div>
+            <form name="formSignUp" class="sign-up__form-inner" action="/" method="post">
+                <input id="formSignUpName" class="sign-up__form-input" type="text" placeholder="Enter your login">
+                <input id="formSignUpPassword" class="sign-up__form-input" type="text" placeholder="Enter your password">
+                <input id="formSignUpPasswordAgain" class="sign-up__form-input" type="text" placeholder="Enter your password again">
+                <input id="formSignUpBtn" class="btn--sign-up" type="submit" value="Sign up">
+            </form>
+
+            <div class="sign-up__form-footer">
+                <span>Already registered?</span><a id="linkLogIn" class="sign-up__form-footer-link" href="#">Log in</a> 
+            </div>
+        </div>
+        
+    </div>`;
     }
 }
 
-function addTweet(text) {
-    if (tweetsCollection.add(text)) {
-        tweetsFeed.display(tweetsCollection.tweets);
+class LogInView {
+    constructor(containerId) {
+        this.containerId = document.getElementById(containerId);
+    }
+
+    display() {
+        const buttonHeader = document.getElementById('buttonHeader');
+        const headerText = document.getElementById('headerText');
+
+        if (buttonHeader) {
+            buttonHeader.classList.add('hide');
+        }
+
+        const tweetsSet = document.getElementById('tweetsSet');
+        const tweetsRight = document.getElementById('tweetsRight');
+
+        if (document.getElementById('headerTextPage')) {
+            headerTextPage.remove();
+            headerArrow.remove();
+        }
+
+        headerText.insertAdjacentHTML('afterend', `
+        <img id="headerArrow" class="header__arrow" src="images/Arrow.svg" alt="">
+        <div id="headerTextPage" class="header__text--page-name">Log in</div>`);
+
+        if (tweetsSet) {
+            tweetsSet.classList.add('hide');
+        }
+        if (tweetsRight) {
+            tweetsRight.classList.add('hide');
+        }
+
+        this.containerId.innerHTML = `<div class="sign-up__left">
+        <img src="images/sign up image.png" alt="image">
+    </div>
+    <div class="sign-up__rigth">
+        <div class="sign-up__form">
+            <div class="sign-up__form-title">Tell the world your
+                interesting story</div>
+            <form name="formLogIn" class="sign-up__form-inner" action="/" method="post">
+                <input id="formLogInName" class="sign-up__form-input" type="text" placeholder="Enter your login" name="name">
+                <input id="formLogInPassword" class="sign-up__form-input" type="text" placeholder="Enter your password" name="password">
+                <input id="formLogInBtn" class="btn--sign-up" type="submit" value="Log in">
+            </form>
+
+            <div class="sign-up__form-footer">
+                <span>Not an account?</span><a id="linkSignUp" class="sign-up__form-footer-link" href="#">Sign up</a> 
+            </div>
+        </div>
+        
+    </div>`;
     }
 }
 
-function editTweet(id, text) {
-    if (tweetsCollection.edit(id, text)) {
-        tweetsFeed.display(tweetsCollection.tweets);
+class TweetsController {
+    constructor() {
+        this.tweetFeed = new TweetFeed();
+        this.headerView = new HeaderView('headerInner');
+        this.tweetsFeedView = new TweetFeedView('tweetsTape');
+        this.tweetView = new TweetView('tweetsTape');
+        this.userList = new UserList(usersArr);
+        this.registr = new RegistrationView('tweetsMain');
+        this.logInViewClass = new LogInView('tweetsMain');
     }
-}
 
-function removeTweet(id) {
-    if (tweetsCollection.remove(id)) {
-        tweetsFeed.display(tweetsCollection.tweets);
+    setCurrentUser(user) {
+        if (user && typeof user === 'string') {
+            const buttonHeader = document.getElementById('buttonHeader');
+            this.tweetFeed.user = user;
+            this.headerView.display(user);
+            if (user !== 'guest') {
+                buttonHeader.textContent = 'Log out';
+                buttonHeader.setAttribute('id', 'logout');
+            }
+        }
     }
-}
 
-function getFeed(skip = 0, top = 10, filterConfig = {}) {
-    const tweetFilter = tweetsCollection.getPage(skip, top, filterConfig);
-    tweetsFeed.display(tweetFilter);
-}
+    addTweet(text) {
+        if (this.tweetFeed.add(text)) {
+            this.tweetsFeedView.display(this.tweetFeed.tweets);
+        }
+        this.getFeed(0, 10, {});
+    }
 
-function showTweet(id) {
-    if (id) {
-        const tweetGet = tweetsCollection.get(id);
-        if (tweetGet) {
-            tweet.display(tweetGet);
+    editTweet(id, text) {
+        if (this.tweetFeed.edit(id, text)) {
+            this.tweetsFeedView.display(this.tweetFeed.tweets);
+        }
+        this.getFeed(0, 10, {});
+    }
+
+    removeTweet(id) {
+        if (this.tweetFeed.remove(id)) {
+            this.tweetsFeedView.display(this.tweetFeed.tweets);
+        }
+        this.getFeed(0, 10, {});
+    }
+
+    getFeed(skip = 0, top = 10, filterConfig = {}) {
+        const tweetFilter = this.tweetFeed.getPage(skip, top, filterConfig);
+        this.tweetsFeedView.display(tweetFilter, this.tweetFeed.user);
+
+        if (tweetFilter.length < this.tweetFeed.tweets.length) {
+            const loadMore = document.getElementById('loadMore');
+            loadMore.classList.remove('hide');
+        }
+    }
+
+    showTweet(id) {
+        if (id) {
+            const tweetGet = this.tweetFeed.get(id);
+            if (tweetGet) {
+                this.tweetView.display(tweetGet, this.tweetFeed.user);
+            }
+        }
+    }
+
+    registration(name, password) {
+        this.userList.addUser(name, password);
+    }
+
+    registrationView(userName) {
+        if (!userName || userName === 'guest') {
+            this.registr.display();
+        }
+    }
+
+    logIn(name, password) {
+        if (!name || typeof name !== 'string') {
+            return false;
+        }
+
+        if (!password || typeof password !== 'string') {
+            return false;
+        }
+
+        const user = this.userList.users.find(item => item.name === name);
+
+        if (user && user.password === password) {
+            this.setCurrentUser(name);
+            return true;
+        }
+    }
+
+    logInView(userName) {
+        if (!userName || userName === 'guest') {
+            this.logInViewClass.display();
         }
     }
 }
 
-// setCurrentUser('Kirill Borisyonok');
-// console.log(tweetsCollection);
-// setCurrentUser();
-// console.log(tweetsCollection);
-// setCurrentUser('Nick');
-// console.log(tweetsCollection);
-// setCurrentUser('Mike>');
-// console.log(tweetsCollection);
-// setCurrentUser('Tough');
-// console.log(tweetsCollection);
-// setCurrentUser('Nut');
-// console.log(tweetsCollection);
+function local() {
+    if (localStorage.length === 0) {
+        localStorage.setItem('tweets', JSON.stringify(tweets));
+        localStorage.setItem('user', JSON.stringify(usersArr));
+    }
+}
 
-// addTweet('1');
-// console.log(tweetsCollection);
-// addTweet('2');
-// console.log(tweetsCollection);
-// addTweet('3');
-// console.log(tweetsCollection);
-// addTweet('4');
-// console.log(tweetsCollection);
-// addTweet('5');
-// console.log(tweetsCollection);
+local();
 
-// editTweet('1', 'text');
-// console.log(tweetsCollection);
-// editTweet('3', 'text');
-// console.log(tweetsCollection);
-// editTweet('5', 'text');
-// console.log(tweetsCollection);
-// editTweet('7', 'text');
-// console.log(tweetsCollection);
-// editTweet('1', '1');
-// console.log(tweetsCollection);
+const controller = new TweetsController();
 
-// removeTweet('1');
-// console.log(tweetsCollection);
-// removeTweet('3');
-// console.log(tweetsCollection);
-// removeTweet('5');
-// console.log(tweetsCollection);
-// removeTweet('7');
-// console.log(tweetsCollection);
-// removeTweet('9');
-// console.log(tweetsCollection);
-// removeTweet('11');
-// console.log(tweetsCollection);
-// removeTweet('13');
-// console.log(tweetsCollection);
-// removeTweet('15');
-// console.log(tweetsCollection);
-// removeTweet('17');
-// console.log(tweetsCollection);
-// removeTweet('19');
-// console.log(tweetsCollection);
-// removeTweet('2');
-// console.log(tweetsCollection);
+controller.getFeed(0, 10);
 
-// showTweet('2');
-// getFeed(0, 10);
-// getFeed(0, 10, { author: 'Петров Петр', hashtags: ['#js'], text: 'какие' });
+// Переход на страницу твита
+const tweetsTape = document.getElementById('tweetsTape');
 
-// showTweet('123');
-// showTweet('3');
-// showTweet('4');
-// showTweet('5');
-// showTweet('5222');
+function tweetShow() {
+    controller.showTweet(`${event.target.closest('SECTION').id}`);
+
+    const headerText = document.getElementById('headerText');
+    headerText.addEventListener('click', (event) => {
+        event.preventDefault();
+        controller.getFeed(0, 10, {});
+        tweetsTape.addEventListener('click', tweetShow);
+    });
+
+    tweetsTape.removeEventListener('click', tweetShow);
+}
+
+tweetsTape.addEventListener('click', (event) => {
+    if (event.target.closest('#tweetDelete')) {
+        let tweetDelete = event.target.closest('SECTION');
+        controller.removeTweet(`${tweetDelete.id}`);
+        tweetsTape.addEventListener('click', tweetShow);
+    }
+});
+
+tweetsTape.addEventListener('click', tweetShow);
+
+// Переход на страницу логин и сайнап
+const buttonHeader = document.getElementById('buttonHeader');
+
+if (buttonHeader) {
+    buttonHeader.addEventListener('click', (event) => {
+        event.preventDefault();
+        controller.logInView();
+
+        const headerText = document.getElementById('headerText');
+
+        headerText.addEventListener('click', (event) => {
+            event.preventDefault();
+            controller.getFeed(0, 10, {});
+        });
+
+        // Вход пользователя
+        const formLogIn = document.forms.formLogIn;
+
+        formLogIn.formLogInBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+            console.log(formLogIn.formLogInName.value)
+            console.log(formLogIn.formLogInPassword.value)
+
+            if (controller.logIn(formLogIn.formLogInName.value, formLogIn.formLogInPassword.value)) {
+                controller.getFeed(0, 10, {});
+            }
+        });
+
+        const linkSignUp = document.getElementById('linkSignUp');
+
+        linkSignUp.addEventListener('click', (event) => {
+            event.preventDefault();
+            controller.registrationView();
+
+            // Регистрация пользователя
+            const formSignUp = document.forms.formSignUp;
+
+            formSignUp.formSignUpBtn.addEventListener('click', (event) => {
+                event.preventDefault();
+                if (formSignUp.formSignUpPassword.value === formSignUp.formSignUpPasswordAgain.value) {
+                    controller.registration(formSignUp.formSignUpName.value, formSignUp.formSignUpPassword.value)
+                }
+            })
+
+            const linkLogIn = document.getElementById('linkLogIn');
+
+            linkLogIn.addEventListener('click', (event) => {
+                event.preventDefault();
+                controller.logInView();
+            })
+
+            const headerText = document.getElementById('headerText');
+
+            headerText.addEventListener('click', (event) => {
+                event.preventDefault();
+                controller.getFeed(0, 10, {});
+
+                const buttonHeader = document.getElementById('buttonHeader');
+
+                if (buttonHeader) {
+                    buttonHeader.addEventListener('click', (event) => {
+                        event.preventDefault();
+                        controller.logInView();
+                    });
+                }
+            });
+        });
+    });
+}
+
+// выход пользователя
+const logOut = document.getElementById('logout');
+
+if (logOut) {
+    const headerClient = document.getElementById('headerClient');
+    logOut.addEventListener('click', (event) => {
+        event.preventDefault();
+        controller.setCurrentUser('guest');
+        logOut.remove();
+        headerClient.insertAdjacentHTML('afterend', `<a id="buttonHeader" href="#" class="btn">
+        <img class="btn__img" src="images/door.svg" alt="door">
+        <span class="btn__text">log in</span>
+    </a>`);
+
+        const buttonHeader = document.getElementById('buttonHeader');
+
+        if (buttonHeader) {
+            buttonHeader.addEventListener('click', (event) => {
+                event.preventDefault();
+                controller.logInView();
+
+                const linkSignUp = document.getElementById('linkSignUp');
+
+                linkSignUp.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    controller.registrationView();
+
+                    const headerText = document.getElementById('headerText');
+
+                    headerText.addEventListener('click', (event) => {
+                        event.preventDefault();
+                        controller.getFeed(0, 10, {});
+                    });
+                });
+            });
+        }
+    });
+}
+
+// переход на главную страницу при клике на 'home'
+const headerText = document.getElementById('headerText');
+
+headerText.addEventListener('click', (event) => {
+    event.preventDefault();
+    controller.getFeed(0, 10, {});
+});
+
+// Увеличение количества твитов на странице при клике на load more
+const loadMore = document.getElementById('loadMore');
+
+loadMore.addEventListener('click', (event) => {
+    let num = tweetsTape.childElementCount - 1;
+    controller.getFeed(0, num + 10, {});
+    event.stopPropagation();
+});
+
+// Фильтрация твитов
+
+const filterForm = document.forms.formFilter;
+
+filterForm.searchForm.addEventListener('click', (event) => {
+    event.preventDefault();
+    const filterInput = {};
+    if (filterForm.filterAuthor.value) {
+        filterInput.author = filterForm.filterAuthor.value;
+    }
+
+    if (filterForm.filterText.value) {
+        filterInput.text = filterForm.filterText.value;
+    }
+
+    if (filterForm.filterDateFrom.value) {
+        filterInput.dateFrom = new Date(filterForm.filterDateFrom.value);
+    }
+
+    if (filterForm.filterDateTo.value) {
+        filterInput.dateTo = new Date(filterForm.filterDateTo.value);
+    }
+
+    if (filterForm.filterTags.value) {
+        filterInput.hashtags = filterForm.filterTags.value;
+    }
+
+    console.log(filterInput);
+
+    if (Object.keys(filterInput).length !== 0) {
+        controller.getFeed(0, controller.tweetFeed.tweets.length, filterInput);
+        const loadMore = document.getElementById('loadMore');
+        loadMore.classList.add('hide');
+    }
+});
+
+filterForm.resetForm.addEventListener('click', () => {
+    controller.getFeed(0, 10, {});
+});
+
+// Добавлние твита
+const formSet = document.forms.formSet;
+
+formSet.formSetBtn.addEventListener('click', (event) => {
+    event.preventDefault();
+    controller.addTweet(`${formSet.formSetInput.value}`);
+});
