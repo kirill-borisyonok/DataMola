@@ -40,21 +40,14 @@
                     <div class="header__client-user">
                         <div id="headerClient" class="header__client-user-name">
                             <img class="header__client-user-photo" src="images/my_photo.png" alt="user photo">
-                            <div id="userName" class="header__client-user-text">guest</div>
+                            <div id="userName" class="header__client-user-text"></div>
                         </div>
                         <a id="buttonHeader" href="#" class="btn">
                             <img class="btn__img" src="images/door.svg" alt="door">
                             <span class="btn__text">log in</span>
                         </a>
 
-                        <a href="#" class="header__btn-img">
-                            <svg width="15" height="20" viewBox="0 0 15 20" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M0 3V17C0 17.2652 0.105357 17.5196 0.292893 17.7071C0.48043 17.8946 0.734784 18 1 18H4V16H2V4H4V2H1C0.734784 2 0.48043 2.10536 0.292893 2.29289C0.105357 2.48043 0 2.73478 0 3ZM14.242 2.03L6.242 0.0299985C6.09462 -0.00676077 5.9408 -0.00946193 5.79222 0.0221001C5.64363 0.0536622 5.50419 0.118658 5.38448 0.212154C5.26477 0.30565 5.16792 0.42519 5.10131 0.561699C5.03469 0.698209 5.00004 0.848101 5 0.999999V19C4.99965 19.152 5.03404 19.3021 5.10054 19.4388C5.16704 19.5755 5.26389 19.6953 5.38371 19.7888C5.50352 19.8824 5.64313 19.9474 5.79188 19.9788C5.94063 20.0102 6.09459 20.0072 6.242 19.97L14.242 17.97C14.4584 17.916 14.6506 17.7912 14.788 17.6155C14.9253 17.4397 14.9999 17.2231 15 17V3C14.9999 2.77694 14.9253 2.5603 14.788 2.38454C14.6506 2.20877 14.4584 2.08398 14.242 2.03ZM10 10.188C9.98848 10.4455 9.87809 10.6886 9.69182 10.8667C9.50554 11.0449 9.25774 11.1443 9 11.1443C8.74226 11.1443 8.49446 11.0449 8.30818 10.8667C8.12191 10.6886 8.01152 10.4455 8 10.188V9.811C8.00013 9.54578 8.10562 9.29148 8.29325 9.10404C8.48088 8.91659 8.73528 8.81137 9.0005 8.8115C9.26572 8.81163 9.52002 8.91712 9.70746 9.10474C9.8949 9.29237 10.0001 9.54678 10 9.812V10.188Z"
-                                    fill="black" />
-                            </svg>
-                        </a>
+
                     </div>
                 </div>
             </div>
@@ -85,21 +78,14 @@
 
 
                     </div> <!-- /.tweets__tape -->
-                    <footer class="footer">
 
-                        <div class="footer__item">Tale</div>
-                        <div class="footer__item">Kirill Borisyonok</div>
-                        <div class="footer__item">boravdv@mail.ru</div>
-                        <div class="footer__item">28 Feb 2022</div>
 
-                        <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path class="footer__img"
-                                d="M20 20L15.514 15.506L20 20ZM18 9.5C18 11.7543 17.1045 13.9163 15.5104 15.5104C13.9163 17.1045 11.7543 18 9.5 18C7.24566 18 5.08365 17.1045 3.48959 15.5104C1.89553 13.9163 1 11.7543 1 9.5C1 7.24566 1.89553 5.08365 3.48959 3.48959C5.08365 1.89553 7.24566 1 9.5 1C11.7543 1 13.9163 1.89553 15.5104 3.48959C17.1045 5.08365 18 7.24566 18 9.5V9.5Z"
-                                stroke="#858585" stroke-width="2" stroke-linecap="round" />
-                        </svg>
 
-                    </footer>
+                    <div class="button__tweets-footer">
+                        <button id="loadMore" class="btn btn--load hide">load more</button>
+                    </div>
                 </div> <!-- /.tweets__left -->
+
 
                 <div id="tweetsRight" class="tweets__right">
                     <div class="tweets__filter">
@@ -160,6 +146,21 @@
             </div> <!-- /.tweets__inner  -->
         </div> <!-- /.container  -->
     </main> <!-- /.main  -->
+
+    <footer class="footer">
+
+        <div class="footer__item">Tale</div>
+        <div class="footer__item">Kirill Borisyonok</div>
+        <div class="footer__item">boravdv@mail.ru</div>
+        <div class="footer__item">28 Feb 2022</div>
+
+        <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path class="footer__img"
+                d="M20 20L15.514 15.506L20 20ZM18 9.5C18 11.7543 17.1045 13.9163 15.5104 15.5104C13.9163 17.1045 11.7543 18 9.5 18C7.24566 18 5.08365 17.1045 3.48959 15.5104C1.89553 13.9163 1 11.7543 1 9.5C1 7.24566 1.89553 5.08365 3.48959 3.48959C5.08365 1.89553 7.24566 1 9.5 1C11.7543 1 13.9163 1.89553 15.5104 3.48959C17.1045 5.08365 18 7.24566 18 9.5V9.5Z"
+                stroke="#858585" stroke-width="2" stroke-linecap="round" />
+        </svg>
+
+    </footer>
 
     <!-- <script src="twitter.js"></script> -->
     <script src="Tweet.js"></script>
