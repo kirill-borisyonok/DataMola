@@ -344,7 +344,7 @@ class TweetFeed {
     }
 
     set user(user) {
-        this._user = `${user}`
+        this._user = `${user}`;
         localStorage.setItem('user', JSON.stringify(user));
     }
 
@@ -353,7 +353,6 @@ class TweetFeed {
     }
 
     save() {
-        console.log(this.tweets);
         const tweet = this.tweets.map(item => item = {
             id: item.id,
             text: item.text,
@@ -531,7 +530,7 @@ class UserList {
     }
 
     save() {
-        localStorage.setItem('userList', JSON.stringify(this.users))
+        localStorage.setItem('userList', JSON.stringify(this.users));
     }
 
     addUser(name, password) {
@@ -562,6 +561,100 @@ class TweetFeedView {
         this.containerId = document.getElementById(containerId);
     }
 
+    _editTweetId = '';
+
+    get editTweetId() {
+        return this._editTweetId;
+    }
+
+    set editTweetId(editTweetId) {
+        this._editTweetId = editTweetId;
+    }
+
+    tweetEvent(event) {
+        if (event.target.closest('#tweetDelete')) {
+            const tweetDelete = event.target.closest('SECTION');
+            controller.removeTweet(`${tweetDelete.id}`);
+            controller.headerView.display(controller.tweetFeed.user);
+            return;
+        }
+
+        if (event.target.closest('#tweetEdit')) {
+            const tweetEdit = event.target.closest('SECTION');
+            const tweetId = tweetEdit.id;
+            const tweetEditText = controller.tweetFeed.get(tweetId).text;
+            formSet.formSetInput.value = tweetEditText;
+            formSet.formSetBtn.classList.add('hide');
+            formSet.formEditBtn.classList.remove('hide');
+            controller.tweetsFeedView.editTweetId = tweetId;
+            return;
+        }
+
+        if (event.target.closest('[data-tweets]')) {
+            controller.showTweet(event.target.closest('[data-tweets]').id);
+            controller.headerView.display(controller.tweetFeed.user);
+            const loadMore = document.getElementById('loadMore');
+
+            loadMore.classList.add('hide');
+        }
+    }
+
+    addTweetsLoad() {
+        const tweetsTape = document.getElementById('tweetsTape');
+        const newTop = tweetsTape.childElementCount + 10;
+        controller.getFeed(0, newTop);
+    }
+
+    addTweets(event) {
+        event.preventDefault();
+        controller.addTweet(`${formSet.formSetInput.value}`);
+        formSet.formSetInput.value = '';
+    }
+
+    editTweets(event) {
+        event.preventDefault();
+        controller.editTweet(controller.tweetsFeedView.editTweetId, formSet.formSetInput.value);
+        formSet.formSetInput.value = '';
+        formSet.formSetBtn.classList.remove('hide');
+        formSet.formEditBtn.classList.add('hide');
+    }
+
+    filter(event) {
+        event.preventDefault();
+        const filterInput = {};
+        const filterForm = document.forms.formFilter;
+
+        if (filterForm.filterAuthor.value) {
+            filterInput.author = filterForm.filterAuthor.value;
+        }
+
+        if (filterForm.filterText.value) {
+            filterInput.text = filterForm.filterText.value;
+        }
+
+        if (filterForm.filterDateFrom.value) {
+            filterInput.dateFrom = new Date(filterForm.filterDateFrom.value);
+        }
+
+        if (filterForm.filterDateTo.value) {
+            filterInput.dateTo = new Date(filterForm.filterDateTo.value);
+        }
+
+        if (filterForm.filterTags.value) {
+            filterInput.hashtags = filterForm.filterTags.value;
+        }
+
+        if (Object.keys(filterInput).length !== 0) {
+            controller.getFeed(0, controller.tweetFeed.tweets.length, filterInput, controller.tweetFeed.user);
+            const loadMore = document.getElementById('loadMore');
+            loadMore.classList.add('hide');
+        }
+    }
+
+    resetFilter() {
+        controller.getFeed(0, 10, {}, controller.tweetFeed.user);
+    }
+
     display(tweetsArr, user) {
         const tweetsMain = document.getElementById('tweetsMain');
         const tweetsContainer = document.getElementById('tweetsContainer');
@@ -584,20 +677,17 @@ class TweetFeedView {
                                     placeholder="What's happening?"></textarea>
                                 <div class="tweets__set-form-button">
                                     <input id="formSetBtn" type="submit" class="btn--submit" href="#" value="Tell">
+                                    <input id="formEditBtn" type="submit" class="btn--submit hide" href="#" value="Edit">
                                 </div>
                             </form>
                         </div>
-
                     </div> <!-- /.tweets__set -->
-
                     <div id="tweetsTape" class="tweets__tape">
-
                     </div> <!-- /.tweets__tape -->
                     <div class="button__tweets-footer">
                         <button id="loadMore" class="btn btn--load hide">load more</button>
                     </div>
                 </div> <!-- /.tweets__left -->
-
                 <div id="tweetsRight" class="tweets__right">
                     <div class="tweets__filter">
                         <div class="tweets__filter-inner">
@@ -609,7 +699,6 @@ class TweetFeedView {
                                     <input class="filter__input" id="filterAuthor" list="dataLIst" type="text"
                                         placeholder="Select author">
                                 </div>
-
                                 <div class="filter__form-item">
                                     <label class="filter__input-title" for="filterDate">Search tweets by date and
                                         time</label>
@@ -617,40 +706,31 @@ class TweetFeedView {
                                         <div class="filter__input-text">from</div>
                                         <div class="filter__input-datetime">
                                             <input id="filterDateFrom" class="filter__input-date" id="filterDate" type="datetime-local">
-
                                         </div>
                                     </div>
-
                                     <div class="filter__input-date-elem">
                                         <div class="filter__input-text">to</div>
                                         <div class="filter__input-datetime">
                                             <input id="filterDateTo" class="filter__input-date" type="datetime-local">
-
                                         </div>
                                     </div>
-
                                 </div>
-
                                 <div class="filter__form-item">
                                     <label class="filter__input-title" for="filterText">Search tweets by text</label>
                                     <input class="filter__input" id="filterText" type="text" placeholder="Select text">
                                 </div>
-
                                 <div class="filter__form-item">
                                     <label class="filter__input-title" for="filterTags">Search tweets by #tags</label>
                                     <input class="filter__input" id="filterTags" type="text" placeholder="Select #tags">
                                 </div>
-
                                 <div class="filter__footer">
                                     <input id="resetForm" class="btn btn--white btn--filter" type="reset" value="clear"></button>
                                     <input id="searchForm" class="btn btn--filter" type="submit" value="search"></button>
                                 </div>
                             </form>
-
                         </div>
                     </div> <!-- /.tweets__filter  -->
                 </div> <!-- /.tweets__rigth  -->
-
             </div> <!-- /.tweets__inner  -->
         </div> <!-- /.container  -->`;
 
@@ -702,7 +782,7 @@ class TweetFeedView {
 
         const tweetsItems = tweetsArr.map(item => {
             if (item.author === user) {
-                return `<section id="${item.id}" class="tweets__item">
+                return `<section id="${item.id}" data-tweets="tweet" class="tweets__item">
                 <div class="tweets__item-inner">  
                     <img class="tweets__item-img" src="images/my_photo.png" alt="user photo">
                     
@@ -728,7 +808,7 @@ class TweetFeedView {
                 </div>
             </section>`;
             } else {
-                return `<section id="${item.id}" class="tweets__item">
+                return `<section id="${item.id}" data-tweets="tweet" class="tweets__item">
                             <div class="tweets__item-inner">  
                                 <img class="tweets__item-img" src="images/my_photo.png" alt="user photo">
                                 
@@ -754,28 +834,6 @@ class TweetFeedView {
 
         this.containerId.innerHTML = `${tweetsItems}`;
 
-        let tweetShow = (event) => {
-            controller.showTweet(event.target.closest('SECTION').id);
-            controller.headerView.display(controller.tweetFeed.user);
-            this.containerId.removeEventListener('click', tweetShow);
-        }
-
-        let deleteTweet = (event) => {
-            if (event.target.closest('#tweetDelete')) {
-                const tweetDelete = event.target.closest('SECTION');
-                controller.removeTweet(`${tweetDelete.id}`);
-                controller.headerView.display(controller.tweetFeed.user);
-                this.containerId.removeEventListener('click', deleteTweet);
-                event.stopPropagation();
-            }
-        }
-
-        this.containerId.removeEventListener('click', tweetShow);
-
-        this.containerId.addEventListener('click', tweetShow);
-
-        this.containerId.addEventListener('click', deleteTweet);
-
         const loadMore = document.getElementById('loadMore');
 
         if (this.containerId.childElementCount < controller.tweetFeed.tweets.length) {
@@ -784,30 +842,42 @@ class TweetFeedView {
             loadMore.classList.add('hide');
         }
 
-        let addTweetsLoad = () => {
-            let newTop = this.containerId.childElementCount + 10;
-            controller.getFeed(0, newTop)
-            loadMore.removeEventListener('click', addTweetsLoad);
-        }
+        this.containerId.removeEventListener('click', this.tweetEvent);
+        this.containerId.addEventListener('click', this.tweetEvent);
 
-        loadMore.addEventListener('click', addTweetsLoad);
+        loadMore.removeEventListener('click', this.addTweetsLoad);
+        loadMore.addEventListener('click', this.addTweetsLoad);
 
         // Добавление твита
         const formSet = document.forms.formSet;
 
-        let addTweets = (event) => {
-            event.preventDefault();
-            controller.addTweet(`${formSet.formSetInput.value}`);
-            formSet.formSetBtn.removeEventListener('click', addTweets);
-        }
+        formSet.formSetBtn.removeEventListener('click', this.addTweets);
+        formSet.formSetBtn.addEventListener('click', this.addTweets);
 
-        formSet.formSetBtn.addEventListener('click', addTweets);
+        formSet.formEditBtn.removeEventListener('click', this.editTweets);
+        formSet.formEditBtn.addEventListener('click', this.editTweets);
+
+        const filterForm = document.forms.formFilter;
+
+        filterForm.searchForm.removeEventListener('click', this.filter);
+        filterForm.searchForm.addEventListener('click', this.filter);
+
+        filterForm.resetForm.removeEventListener('click', this.resetFilter);
+        filterForm.resetForm.addEventListener('click', this.resetFilter);
     }
 }
-
 class TweetView {
     constructor(containerId) {
         this.containerId = document.getElementById(containerId);
+    }
+
+    addCommentView(event) {
+        event.preventDefault();
+        const setComment = document.forms.setComment;
+        const tweetNow = controller.tweetFeed.tweets.find(item => item.id === document.querySelector('SECTION').id);
+        controller.tweetFeed.addComment(tweetNow.id, setComment.setCommentInput.value);
+        controller.tweetView.display(tweetNow, controller.tweetFeed.user);
+        controller.headerView.display(controller.tweetFeed.user);
     }
 
     display(tweet, user) {
@@ -817,7 +887,6 @@ class TweetView {
 
         tweetsSet.classList.add('hide');
         tweetsRight.classList.add('hide');
-
 
         let date = (date) => {
             const month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -911,27 +980,45 @@ class TweetView {
                             <a class="comment__item-author" href="#">${comment.author}</a>
                             <time pubdate class="comment__item-date">${date(comment.createdAt)} <b>${time(comment.createdAt)}</b></time>
                         </div>
-                        <div class="comment__text">${textGood(comment.text)}))</div>
+                        <div class="comment__text">${textGood(comment.text)}</div>
                     </div> 
                 </div>
-            </div>`);
+            </div>`).join('\n');
 
         this.containerId = document.getElementById('tweetsTape');
 
         this.containerId.innerHTML = `${tweetItem}\n
                 <div class="comment-title">Comments</div>\n
                 ${comments}\n
-                <div class="comment__set">
+                <div id="commentMainSet" class="comment__set">
                 <div class="comment__set-inner">
                     <img class="comment__set-photo" src="images/my_photo.png" alt="user photo">
-                    <form class="comment__set-form" action="/" method="post">
-                        <textarea class="comment__set-form-input" type="text" maxlength="280" placeholder="Enter your comment"></textarea>
+                    <form name="setComment" class="comment__set-form">
+                        <textarea id="setCommentInput" class="comment__set-form-input" type="text" maxlength="280" placeholder="Enter your comment"></textarea>
                         <div class="comment__set-form-button">
-                            <button type="submit" class="btn--submit" href="#">Add</button>
+                            <button id="setCommentBtn" type="submit" class="btn--submit" href="#">Add</button>
                         </div> 
                     </form>
                 </div> <!-- /.comment__set -->
             </div> `;
+
+        const commentMainSet = document.getElementById('commentMainSet');
+        const setComment = document.forms.setComment;
+
+        if (user !== 'guest') {
+            if (commentMainSet) {
+                commentMainSet.classList.remove('hide');
+            }
+        }
+
+        if (user === 'guest') {
+            if (commentMainSet) {
+                commentMainSet.classList.add('hide');
+            }
+        }
+
+        setComment.setCommentBtn.removeEventListener('click', this.addCommentView);
+        setComment.setCommentBtn.addEventListener('click', this.addCommentView);
     }
 }
 
@@ -975,13 +1062,12 @@ class RegistrationView {
                 <div class="sign-up__form">
                     <div class="sign-up__form-title">Tell the world your
                         interesting story</div>
-                    <form name="formSignUp" class="sign-up__form-inner" action="/" method="post">
+                    <form name="formSignUp" class="sign-up__form-inner" method="post">
                         <input id="formSignUpName" class="sign-up__form-input" type="text" placeholder="Enter your login">
                         <input id="formSignUpPassword" class="sign-up__form-input" type="text" placeholder="Enter your password">
                         <input id="formSignUpPasswordAgain" class="sign-up__form-input" type="text" placeholder="Enter your password again">
                         <input id="formSignUpBtn" class="btn--sign-up" type="submit" value="Sign up">
                     </form>
-
                     <div class="sign-up__form-footer">
                         <span>Already registered?</span><a id="linkLogIn" class="sign-up__form-footer-link" href="#">Log in</a> 
                     </div>
@@ -995,8 +1081,29 @@ class RegistrationView {
         formSignUp.formSignUpBtn.addEventListener('click', (event) => {
             event.preventDefault();
             if (formSignUp.formSignUpPassword.value === formSignUp.formSignUpPasswordAgain.value) {
-                controller.registration(formSignUp.formSignUpName.value, formSignUp.formSignUpPassword.value);
-                controller.logInView();
+                if (controller.registration(formSignUp.formSignUpName.value, formSignUp.formSignUpPassword.value)) {
+                    controller.logInView();
+                } else {
+                    formSignUp.formSignUpName.value = '';
+                    formSignUp.formSignUpPassword.value = '';
+                    formSignUp.formSignUpPasswordAgain.value = '';
+                    formSignUp.formSignUpName.classList.add('red');
+                    formSignUp.formSignUpPassword.classList.add('red');
+                    formSignUp.formSignUpPasswordAgain.classList.add('red');
+                    formSignUp.formSignUpName.placeholder = 'incorrect username or password';
+                    formSignUp.formSignUpPassword.placeholder = 'incorrect username or password';
+                    formSignUp.formSignUpPasswordAgain.placeholder = 'incorrect username or password';
+                }
+            } else {
+                formSignUp.formSignUpName.value = '';
+                formSignUp.formSignUpPassword.value = '';
+                formSignUp.formSignUpPasswordAgain.value = '';
+                formSignUp.formSignUpName.classList.add('red');
+                formSignUp.formSignUpPassword.classList.add('red');
+                formSignUp.formSignUpPasswordAgain.classList.add('red');
+                formSignUp.formSignUpName.placeholder = 'incorrect username or password';
+                formSignUp.formSignUpPassword.placeholder = 'incorrect username or password';
+                formSignUp.formSignUpPasswordAgain.placeholder = 'incorrect username or password';
             }
         });
 
@@ -1016,7 +1123,6 @@ class LogInView {
     }
 
     display() {
-
         const tweetsSet = document.getElementById('tweetsSet');
         const tweetsRight = document.getElementById('tweetsRight');
 
@@ -1029,32 +1135,38 @@ class LogInView {
 
         this.containerId.innerHTML = `<div class="sign-up__left">
         <img src="images/sign up image.png" alt="image">
-    </div>
-    <div class="sign-up__rigth">
-        <div class="sign-up__form">
-            <div class="sign-up__form-title">Tell the world your
-                interesting story</div>
-            <form name="formLogIn" class="sign-up__form-inner" action="/" method="post">
-                <input id="formLogInName" class="sign-up__form-input" type="text" placeholder="Enter your login" name="name">
-                <input id="formLogInPassword" class="sign-up__form-input" type="text" placeholder="Enter your password" name="password">
-                <input id="formLogInBtn" class="btn--sign-up" type="submit" value="Log in">
-            </form>
-
-            <div class="sign-up__form-footer">
-                <span>Not an account?</span><a id="linkSignUp" class="sign-up__form-footer-link" href="#">Sign up</a> 
             </div>
-        </div>
-        
-    </div>`;
+            <div class="sign-up__rigth">
+                <div class="sign-up__form">
+                    <div class="sign-up__form-title">Tell the world your
+                        interesting story</div>
+                    <form name="formLogIn" class="sign-up__form-inner" action="/" method="post">
+                        <input id="formLogInName" class="sign-up__form-input" type="text" placeholder="Enter your login" name="name">
+                        <input id="formLogInPassword" class="sign-up__form-input" type="text" placeholder="Enter your password" name="password">
+                        <input id="formLogInBtn" class="btn--sign-up" type="submit" value="Log in">
+                    </form>
+                    <div class="sign-up__form-footer">
+                        <span>Not an account?</span><a id="linkSignUp" class="sign-up__form-footer-link" href="#">Sign up</a> 
+                    </div>
+                </div>
+            </div>`;
 
         // Вход пользователя
         const formLogIn = document.forms.formLogIn;
 
         formLogIn.formLogInBtn.addEventListener('click', (event) => {
             event.preventDefault();
+
             if (controller.logIn(formLogIn.formLogInName.value, formLogIn.formLogInPassword.value)) {
                 controller.getFeed(0, 10, {}, controller.tweetFeed.user);
                 controller.headerView.display(controller.tweetFeed.user);
+            } else {
+                formLogIn.formLogInName.value = '';
+                formLogIn.formLogInPassword.value = '';
+                formLogIn.formLogInName.classList.add('red');
+                formLogIn.formLogInPassword.classList.add('red');
+                formLogIn.formLogInName.placeholder = 'incorrect username or password';
+                formLogIn.formLogInPassword.placeholder = 'incorrect username or password';
             }
         });
 
@@ -1073,6 +1185,33 @@ class HeaderView {
         this.containerId = document.getElementById(containerId);
     }
 
+    home(event) {
+        event.preventDefault();
+        const headerArrow = document.getElementById('headerArrow');
+        const headerTextPage = document.getElementById('headerTextPage');
+        const buttonHeader = document.getElementById('buttonHeader');
+        buttonHeader.classList.remove('hide');
+
+        controller.getFeed();
+
+        if (headerArrow) {
+            headerArrow.remove();
+            headerTextPage.remove();
+        }
+    }
+
+    logOut(event) {
+        event.preventDefault();
+        controller.tweetFeed.user = 'guest';
+        controller.getFeed();
+        controller.headerView.display(controller.tweetFeed.user);
+    }
+
+    showLogIn(event) {
+        event.preventDefault();
+        controller.logInView();
+    }
+
     display(user) {
         const headerText = document.getElementById('headerText');
         const headerArrow = document.getElementById('headerArrow');
@@ -1084,62 +1223,32 @@ class HeaderView {
         const formLogIn = document.forms.formLogIn;
         const formSignUp = document.forms.formSignUp;
 
-        const tweetsSet = document.getElementById('tweetsSet');
+        // const tweetsSet = document.getElementById('tweetsSet');
         const tweetsRight = document.getElementById('tweetsRight');
 
         userName.textContent = user;
 
         buttonHeader.classList.remove('hide');
 
-
         if (headerArrow) {
             headerArrow.remove();
             headerTextPage.remove();
-        }
-
-        let home = (event) => {
-            event.preventDefault();
-            const headerArrow = document.getElementById('headerArrow');
-            const headerTextPage = document.getElementById('headerTextPage');
-            const buttonHeader = document.getElementById('buttonHeader');
-            buttonHeader.classList.remove('hide');
-
-            controller.getFeed();
-
-            if (headerArrow) {
-                headerArrow.remove();
-                headerTextPage.remove();
-            }
-
-            headerText.removeEventListener('click', home);
-        }
-
-        let logOut = (event) => {
-            event.preventDefault();
-            controller.tweetFeed.user = 'guest';
-            controller.getFeed();
-            this.display(controller.tweetFeed.user)
-            buttonHeader.removeEventListener('click', logOut);
-        }
-
-        let showLogIn = (event) => {
-            event.preventDefault();
-            controller.logInView();
-            buttonHeader.removeEventListener('click', showLogIn);
-            headerText.removeEventListener('click', home);
         }
 
         if (user !== 'guest') {
             buttonHeader.innerHTML = `<img class="btn__img" src="images/door.svg" alt="door">
             <span class="btn__text">log out</span>`;
 
-            buttonHeader.addEventListener('click', logOut);
+            buttonHeader.removeEventListener('click', this.logOut);
+            buttonHeader.addEventListener('click', this.logOut);
         }
 
         if (user === 'guest') {
-            buttonHeader.textContent = `log in`;
+            buttonHeader.textContent = 'log in';
 
-            buttonHeader.addEventListener('click', showLogIn);
+            buttonHeader.removeEventListener('click', this.logOut);
+            buttonHeader.removeEventListener('click', this.showLogIn);
+            buttonHeader.addEventListener('click', this.showLogIn);
         }
 
         if (formLogIn) {
@@ -1156,7 +1265,8 @@ class HeaderView {
                 <img id="headerArrow" class="header__arrow" src="images/Arrow.svg" alt="">
                 <div id="headerTextPage" class="header__text--page-name">Log in</div>`);
 
-            headerText.addEventListener('click', home);
+            headerText.removeEventListener('click', this.home);
+            headerText.addEventListener('click', this.home);
         }
 
         if (formSignUp) {
@@ -1173,9 +1283,8 @@ class HeaderView {
                 <img id="headerArrow" class="header__arrow" src="images/Arrow.svg" alt="">
                 <div id="headerTextPage" class="header__text--page-name">Sign up</div>`);
 
-            headerText.removeEventListener('click', home);
-
-            headerText.addEventListener('click', home);
+            headerText.removeEventListener('click', this.home);
+            headerText.addEventListener('click', this.home);
         }
 
         if (tweetsRight) {
@@ -1184,9 +1293,10 @@ class HeaderView {
                     <img id="headerArrow" class="header__arrow" src="images/Arrow.svg" alt="">
                     <div id="headerTextPage" class="header__text--page-name">Tweet</div>`);
 
-                buttonHeader.removeEventListener('click', showLogIn);
+                // buttonHeader.removeEventListener('click', this.showLogIn);
 
-                headerText.addEventListener('click', home);
+                headerText.removeEventListener('click', this.home);
+                headerText.addEventListener('click', this.home);
                 return;
             }
             tweetsRight.classList.remove('hide');
@@ -1213,23 +1323,17 @@ class TweetsController {
     }
 
     addTweet(text) {
-        if (this.tweetFeed.add(text)) {
-            this.tweetsFeedView.display(this.tweetFeed.tweets);
-        }
+        this.tweetFeed.add(text);
         this.getFeed(0, 10, {});
     }
 
     editTweet(id, text) {
-        if (this.tweetFeed.edit(id, text)) {
-            this.tweetsFeedView.display(this.tweetFeed.tweets);
-        }
+        this.tweetFeed.edit(id, text);
         this.getFeed(0, 10, {});
     }
 
     removeTweet(id) {
-        if (this.tweetFeed.remove(id)) {
-            this.tweetsFeedView.display(this.tweetFeed.tweets);
-        }
+        this.tweetFeed.remove(id);
         this.getFeed(0, 10, {});
     }
 
@@ -1247,7 +1351,10 @@ class TweetsController {
     }
 
     registration(name, password) {
-        this.userList.addUser(name, password);
+        if (this.userList.addUser(name, password)) {
+            return true;
+        }
+        return false;
     }
 
     registrationView(userName) {
@@ -1271,13 +1378,12 @@ class TweetsController {
             this.setCurrentUser(name);
             return true;
         }
-
     }
 
     logInView() {
         if (!this.tweetFeed.user || this.tweetFeed.user === 'guest') {
             this.logInViewClass.display();
-            this.headerView.display(this.tweetFeed.user)
+            this.headerView.display(this.tweetFeed.user);
         }
     }
 }
@@ -1295,39 +1401,3 @@ local(tweets, usersArr, 'guest');
 const controller = new TweetsController();
 controller.getFeed();
 controller.headerView.display(controller.tweetFeed.user);
-
-const filterForm = document.forms.formFilter;
-
-filterForm.searchForm.addEventListener('click', (event) => {
-    event.preventDefault();
-    const filterInput = {};
-    if (filterForm.filterAuthor.value) {
-        filterInput.author = filterForm.filterAuthor.value;
-    }
-
-    if (filterForm.filterText.value) {
-        filterInput.text = filterForm.filterText.value;
-    }
-
-    if (filterForm.filterDateFrom.value) {
-        filterInput.dateFrom = new Date(filterForm.filterDateFrom.value);
-    }
-
-    if (filterForm.filterDateTo.value) {
-        filterInput.dateTo = new Date(filterForm.filterDateTo.value);
-    }
-
-    if (filterForm.filterTags.value) {
-        filterInput.hashtags = filterForm.filterTags.value;
-    }
-
-    if (Object.keys(filterInput).length !== 0) {
-        controller.getFeed(0, controller.tweetFeed.tweets.length, filterInput, controller.tweetFeed.user);
-        const loadMore = document.getElementById('loadMore');
-        loadMore.classList.add('hide');
-    }
-});
-
-filterForm.resetForm.addEventListener('click', () => {
-    controller.getFeed(0, 10, {}, controller.tweetFeed.user);
-});
