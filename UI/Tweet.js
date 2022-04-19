@@ -1401,3 +1401,4 @@ local(tweets, usersArr, 'guest');
 const controller = new TweetsController();
 controller.getFeed();
 controller.headerView.display(controller.tweetFeed.user);
+
