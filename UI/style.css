@@ -794,6 +794,10 @@ h1, h2, h3, h4, h5, h6 {
     display: none;
 }
 
+.red {
+    border: solid 2px rgb(251, 79, 79);
+}
+
 /* Media */
 
 @media (max-width: 1181px) {
