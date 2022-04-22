@@ -1,561 +1,5 @@
 'use strict';
 
-const usersArr = [
-    {
-        name: 'Kirill Borisyonok',
-        password: '123'
-    },
-    {
-        name: 'Anna',
-        password: '111'
-    },
-    {
-        name: 'Eugen',
-        password: '000'
-    },
-    {
-        name: '123',
-        password: '123'
-    }
-];
-
-const tweets = [
-    {
-        id: '1',
-        text: 'Привет! #js #datamola',
-        createdAt: new Date('2021-12-12T01:00'),
-        author: 'Kirill Borisyonok',
-        comments: []
-    },
-    {
-        id: '2',
-        text: 'Какие дела?',
-        createdAt: new Date('2022-03-09T03:00'),
-        author: 'Петров Петр',
-        comments: [{
-            id: '1001',
-            text: 'Хорошо, а у тебя?',
-            createdAt: new Date('2022-03-09T02:00'),
-            author: 'Иванов Иван'
-        }]
-    },
-    {
-        id: '3',
-        text: 'Привет! #datamola',
-        createdAt: new Date('2021-12-12T20:00'),
-        author: 'Kirill Borisyonok',
-        comments: []
-    },
-    {
-        id: '4',
-        text: 'Какие дела?',
-        createdAt: new Date('2021-03-09T04:00'),
-        author: 'Петров Петр',
-        comments: [{
-            id: '1002',
-            text: 'Хорошо, а у тебя?',
-            createdAt: new Date('2022-03-09T19:00'),
-            author: 'Иванов Иван'
-        }]
-    },
-    {
-        id: '5',
-        text: 'Привет! #datamola',
-        createdAt: new Date('2021-12-12T18:00'),
-        author: 'Kirill Borisyonok',
-        comments: []
-    },
-    {
-        id: '6',
-        text: 'Какие дела?',
-        createdAt: new Date('2021-03-09T17:00'),
-        author: 'Петров Петр',
-        comments: [{
-            id: '1003',
-            text: 'Хорошо, а у тебя?',
-            createdAt: new Date('2022-03-09T14:00'),
-            author: 'Иванов Иван'
-        }]
-    },
-    {
-        id: '7',
-        text: 'Привет! #datamola',
-        createdAt: new Date('2021-12-12T15:00'),
-        author: 'Kirill Borisyonok',
-        comments: []
-    },
-    {
-        id: '8',
-        text: 'Какие дела?',
-        createdAt: new Date('2021-03-09T12:00'),
-        author: 'Петров Петр',
-        comments: [{
-            id: '1004',
-            text: 'Хорошо, а у тебя?',
-            createdAt: new Date('2022-03-09T11:00'),
-            author: 'Иванов Иван'
-        }]
-    },
-    {
-        id: '9',
-        text: 'Привет мир! #js #datamola',
-        createdAt: new Date('2021-12-12T10:00'),
-        author: 'Kirill Borisyonok',
-        comments: []
-    },
-    {
-        id: '10',
-        text: 'дела?',
-        createdAt: new Date('2021-03-09T08:00'),
-        author: 'Петров Петр',
-        comments: [{
-            id: '1005',
-            text: 'Хорошо, а у тебя?',
-            createdAt: new Date('2022-03-09T06:00'),
-            author: 'Иванов Иван'
-        }]
-    },
-    {
-        id: '11',
-        text: 'Привет мир! #datamola',
-        createdAt: new Date('2021-12-12T19:10'),
-        author: 'Kirill Borisyonok',
-        comments: []
-    },
-    {
-        id: '12',
-        text: 'дела?',
-        createdAt: new Date('2021-03-09T23:11'),
-        author: 'Петров Петр',
-        comments: [{
-            id: '1006',
-            text: 'Хорошо, а у тебя?',
-            createdAt: new Date('2022-03-09T13:13'),
-            author: 'Иванов Иван'
-        }]
-    },
-    {
-        id: '13',
-        text: 'Привет! #js',
-        createdAt: new Date('2021-12-12T15:16'),
-        author: 'Kirill Borisyonok',
-        comments: []
-    },
-    {
-        id: '14',
-        text: 'дела?',
-        createdAt: new Date('2021-09-09T03:01'),
-        author: 'Петров Петр',
-        comments: [{
-            id: '1007',
-            text: 'Хорошо, а у тебя?',
-            createdAt: new Date('2022-03-09T23:00'),
-            author: 'Иванов Иван'
-        }]
-    },
-    {
-        id: '15',
-        text: 'Привет! #js #datamola',
-        createdAt: new Date('2021-01-12T21:10'),
-        author: 'Kirill Borisyonok',
-        comments: []
-    },
-    {
-        id: '16',
-        text: 'Какие дела? #js #datamola',
-        createdAt: new Date('2021-03-09T06:09'),
-        author: 'Петров Петр',
-        comments: [{
-            id: '1008',
-            text: 'Хорошо, а у тебя?',
-            createdAt: new Date('2022-03-12T23:00'),
-            author: 'Иванов Иван'
-        }]
-    },
-    {
-        id: '17',
-        text: 'Привет! #js #datamola',
-        createdAt: new Date('2021-12-12T12:59'),
-        author: 'Kirill Borisyonok',
-        comments: []
-    },
-    {
-        id: '18',
-        text: '#js дела? #datamola ',
-        createdAt: new Date('2021-03-09T14:44'),
-        author: 'Петров Петр',
-        comments: [{
-            id: '1009',
-            text: 'Хорошо, а у тебя?',
-            createdAt: new Date('2022-03-09T23:00'),
-            author: 'Иванов Иван'
-        }]
-    },
-    {
-        id: '19',
-        text: 'Привет мир! #js',
-        createdAt: new Date('2021-03-09T19:29'),
-        author: 'Kirill Borisyonok',
-        comments: []
-    },
-    {
-        id: '20',
-        text: 'дела?',
-        createdAt: new Date('2021-12-12T16:17'),
-        author: 'Петров Петр',
-        comments: [{
-            id: '1010',
-            text: 'Хорошо, а у тебя?',
-            createdAt: new Date('2022-03-09T23:00'),
-            author: 'Иванов Иван'
-        }]
-    }
-];
-
-class Comment {
-    constructor(commentFields) {
-        this._id = commentFields.id;
-        this.text = commentFields.text;
-        this._createdAt = commentFields.createdAt;
-        this._author = commentFields.author;
-    }
-
-    get id() {
-        return this._id;
-    }
-
-    get createdAt() {
-        return this._createdAt;
-    }
-
-    get author() {
-        return this._author;
-    }
-
-    static maxTextCommentLength = 280;
-
-    static validate(com) {
-        const commentsMandatoryKey = ['id', 'text', 'createdAt', 'author'];
-
-        // проверка на наличие обязательных полей
-        const validateKey = () => {
-            return commentsMandatoryKey.filter(item => item in com).length === 4;
-        };
-
-        // проверка на соответствие полей необходимым условиям
-        const validateId = () => {
-            return typeof com.id === 'string' && com.id !== '';
-        };
-
-        const validateText = () => {
-            return typeof com.text === 'string' && com.text !== '' && com.text.length < Comment.maxTextCommentLength;
-        };
-
-        const validateCreatedAt = () => {
-            return com.createdAt instanceof Date;
-        };
-
-        const validateAuthor = () => {
-            return typeof com.author === 'string' && com.author !== '';
-        };
-
-        const commentValid = validateKey()
-            && validateId()
-            && validateText()
-            && validateCreatedAt()
-            && validateAuthor();
-
-        return commentValid;
-    }
-}
-
-class Tweet {
-    constructor(tweet) {
-        this._id = tweet.id;
-        this.text = tweet.text;
-        this._createdAt = new Date(tweet.createdAt);
-        this._author = tweet.author;
-        this.comments = tweet.comments.map(item => new Comment(item));
-    }
-
-    get id() {
-        return this._id;
-    }
-
-    get createdAt() {
-        return this._createdAt;
-    }
-
-    get author() {
-        return this._author;
-    }
-
-    static maxTextTweetLength = 280;
-
-    static validate(tw) {
-        const tweetsMandatoryKey = ['id', 'text', 'createdAt', 'author', 'comments'];
-
-        // проверка на наличие обязательных полей
-        const validateKey = () => {
-            return tweetsMandatoryKey.filter(item => item in tw).length === 5;
-        };
-
-        // проверка на соответствие полей необходимым условиям
-        const validateId = () => {
-            return typeof tw.id === 'string' && tw.id !== '';
-        };
-
-        const validateText = () => {
-            return typeof tw.text === 'string' && tw.text !== '' && tw.text.length < Tweet.maxTextTweetLength;
-        };
-
-        const validateCreatedAt = () => {
-            return tw.createdAt instanceof Date;
-        };
-
-        const validateAuthor = () => {
-            return typeof tw.author === 'string' && tw.author !== '';
-        };
-
-        const validateComment = () => {
-            return Array.isArray(tw.comments);
-        };
-
-        const tweetsValid = validateKey()
-            && validateId()
-            && validateText()
-            && validateCreatedAt()
-            && validateAuthor()
-            && validateComment();
-
-        return tweetsValid;
-    }
-}
-
-class TweetFeed {
-    constructor() {
-        this.tweets = TweetFeed.restore().map(tweet => new Tweet(tweet));
-    }
-
-    _user = JSON.parse(localStorage.getItem('user'));
-
-    get user() {
-        return this._user;
-    }
-
-    set user(user) {
-        this._user = `${user}`;
-        localStorage.setItem('user', JSON.stringify(user));
-    }
-
-    static restore() {
-        return JSON.parse(localStorage.getItem('tweets'));
-    }
-
-    save() {
-        const tweet = this.tweets.map(item => item = {
-            id: item.id,
-            text: item.text,
-            createdAt: item.createdAt,
-            author: item.author,
-            comments: item.comments.map(comment => comment = {
-                id: comment.id,
-                text: comment.text,
-                createdAt: comment.createdAt,
-                author: comment.author
-            })
-        });
-        localStorage.setItem('tweets', JSON.stringify(tweet))
-    }
-
-    addAll(tws) {
-        let twsTweet = tws.map(tweet => new Tweet(tweet));
-
-        let tweetsNotValid = twsTweet.filter(tweet => !Tweet.validate(tweet));
-        let tweetsValid = twsTweet.filter(tweet => Tweet.validate(tweet));
-
-        this.tweets = this.tweets.concat(tweetsValid);
-
-        this.save();
-
-        return tweetsNotValid;
-    }
-
-    clear() {
-        this.tweets = [];
-
-        this.save();
-    }
-
-    getPage(skip = 0, top = 10, filterConfig = {}) {
-        let filterTweetsArr = this.tweets.slice();
-
-        // сработает в случае наличия filterConfig
-        if (Object.keys(filterConfig).length !== 0) {
-            let count = 0;
-            // фильтрация по имени автора
-            if ('author' in filterConfig) {
-                count += 1;
-                filterTweetsArr = filterTweetsArr.filter(item => item.author.toLowerCase().includes(filterConfig.author.toLowerCase()));
-            }
-
-            // фильтрация по тексту
-            if ('text' in filterConfig) {
-                count += 1;
-                filterTweetsArr = filterTweetsArr.filter(item => item.text.toLowerCase().includes(filterConfig.text.toLowerCase()));
-            }
-
-            // фильтрация по дате
-            if ('dateFrom' in filterConfig && 'dateTo' in filterConfig) {
-                count += 1;
-                filterTweetsArr = filterTweetsArr.filter(item => (filterConfig.dateFrom <= item.createdAt && item.createdAt <= filterConfig.dateTo));
-            } else if ('dateFrom' in filterConfig) {
-                count += 1;
-                filterTweetsArr = filterTweetsArr.filter(item => filterConfig.dateFrom <= item.createdAt);
-            } else if ('dateTo' in filterConfig) {
-                count += 1;
-                filterTweetsArr = filterTweetsArr.filter(item => item.createdAt <= filterConfig.dateTo);
-            }
-
-            // фильтрация по хештегам
-            if ('hashtags' in filterConfig) {
-                count += 1;
-                let hashtagsArr = filterConfig.hashtags;
-                for (let hashtagsItem of hashtagsArr) {
-                    filterTweetsArr = filterTweetsArr.filter(item => item.text.toLowerCase().includes(hashtagsItem.toLowerCase()));
-                }
-            }
-
-            if (count === 0) {
-                return [];
-            }
-        }
-
-        return filterTweetsArr.sort((a, b) => b.createdAt - a.createdAt)
-            .splice(skip, top);
-    }
-
-    get(id) {
-        return this.tweets.find(item => item.id === id);
-    }
-
-    add(text) {
-        if (!this.user || this.user === 'guest') {
-            return false;
-        }
-        let tweet = {};
-        let id = `${Math.round(0 + Math.random() * (10000000000000 - 0))}`;
-
-        tweet.id = id;
-        tweet.text = text;
-        tweet.createdAt = new Date();
-        tweet.author = this.user;
-        tweet.comments = [];
-
-        if (Tweet.validate(new Tweet(tweet))) {
-            this.tweets.push(new Tweet(tweet));
-
-            this.save();
-
-            return true;
-        }
-        return false;
-    }
-
-    edit(idTweet, text) {
-        let tweetEdit = this.get(idTweet);
-
-        if (!tweetEdit || tweetEdit.author !== this.user) {
-            return false;
-        }
-
-        if (typeof text === 'string' && text !== '' && text.length < Tweet.maxTextTweetLength) {
-            tweetEdit.text = text;
-
-            this.save();
-
-            return true;
-        }
-        return false;
-    }
-
-    remove(idTweetDelete) {
-        let tweetDelete = this.get(idTweetDelete);
-
-        if (!tweetDelete || tweetDelete.author !== this.user) {
-            return false;
-        }
-
-        let tweetDeleteIndex = this.tweets.findIndex(item => item.id === idTweetDelete);
-
-        this.tweets.splice(tweetDeleteIndex, 1);
-
-        this.save();
-
-        return true;
-    }
-
-    addComment(idTweet, text) {
-        if (!this.user || this.user === 'guest') {
-            return false;
-        }
-        let tweetAddComment = this.get(idTweet);
-        let comment = {};
-
-        let idCommentsGen = `${Math.round(0 + Math.random() * (100000000000 - 0))}`;
-
-        comment.id = idCommentsGen;
-        comment.text = text;
-        comment.createdAt = new Date();
-        comment.author = this.user;
-
-        if (Comment.validate(comment)) {
-            tweetAddComment.comments.push(new Comment(comment));
-
-            this.save();
-
-            return true;
-        }
-        return false;
-    }
-}
-
-class UserList {
-    constructor() {
-        this.users = UserList.restore();
-    }
-
-    static restore() {
-        return JSON.parse(localStorage.getItem('userList'));
-    }
-
-    save() {
-        localStorage.setItem('userList', JSON.stringify(this.users));
-    }
-
-    addUser(name, password) {
-        if (!name || typeof name !== 'string') {
-            return false;
-        }
-
-        if (!password || typeof password !== 'string') {
-            return false;
-        }
-
-        const usersName = this.users.map(item => item.name);
-
-        if (usersName.includes(name)) {
-            return false;
-        }
-
-        this.users.push({ name: name, password: password });
-
-        this.save();
-
-        return true;
-    }
-}
-
 class TweetFeedView {
     constructor(containerId) {
         this.containerId = document.getElementById(containerId);
@@ -574,28 +18,38 @@ class TweetFeedView {
     tweetEvent(event) {
         if (event.target.closest('#tweetDelete')) {
             const tweetDelete = event.target.closest('SECTION');
-            controller.removeTweet(`${tweetDelete.id}`);
-            controller.headerView.display(controller.tweetFeed.user);
+            controller.removeTweet(`${tweetDelete.id}`)
+                .then(result => controller.headerView.display(localStorage.getItem('user')));
             return;
         }
 
         if (event.target.closest('#tweetEdit')) {
             const tweetEdit = event.target.closest('SECTION');
             const tweetId = tweetEdit.id;
-            const tweetEditText = controller.tweetFeed.get(tweetId).text;
-            formSet.formSetInput.value = tweetEditText;
-            formSet.formSetBtn.classList.add('hide');
-            formSet.formEditBtn.classList.remove('hide');
-            controller.tweetsFeedView.editTweetId = tweetId;
+            controller.serv.getTweets(0, 100000)
+                .then(result => result.find(item => item.id === tweetId))
+                .then(result => {
+                    formSet.formSetInput.value = result.text;
+                    formSet.formSetBtn.classList.add('hide');
+                    formSet.formEditBtn.classList.remove('hide');
+                    controller.tweetsFeedView.editTweetId = result.id;
+                });
+
+            // const tweetEditText = controller.tweetFeed.get(tweetId).text;
+            // formSet.formSetInput.value = tweetEditText;
+            // formSet.formSetBtn.classList.add('hide');
+            // formSet.formEditBtn.classList.remove('hide');
+            // controller.tweetsFeedView.editTweetId = tweetId;
             return;
         }
 
         if (event.target.closest('[data-tweets]')) {
-            controller.showTweet(event.target.closest('[data-tweets]').id);
-            controller.headerView.display(controller.tweetFeed.user);
-            const loadMore = document.getElementById('loadMore');
-
-            loadMore.classList.add('hide');
+            controller.showTweet(event.target.closest('[data-tweets]').id)
+                .then(result => {
+                    controller.headerView.display(localStorage.getItem('user'));
+                    const loadMore = document.getElementById('loadMore');
+                    loadMore.classList.add('hide');
+                });
         }
     }
 
@@ -645,17 +99,39 @@ class TweetFeedView {
         }
 
         if (Object.keys(filterInput).length !== 0) {
-            controller.getFeed(0, controller.tweetFeed.tweets.length, filterInput, controller.tweetFeed.user);
-            const loadMore = document.getElementById('loadMore');
-            loadMore.classList.add('hide');
+            controller.getFeed(0, 10, filterInput, localStorage.getItem('user'))
+                .then(result => {
+                    const loadMore = document.getElementById('loadMore');
+                    if (result.length % 10 === 0) {
+                        loadMore.classList.remove('hide');
+                    } else {
+                        loadMore.classList.add('hide');
+                    }
+                });
         }
     }
 
     resetFilter() {
-        controller.getFeed(0, 10, {}, controller.tweetFeed.user);
+        controller.getFeed(0, 10, {}, localStorage.getItem('user'))
+            .then(result => {
+                const loadMore = document.getElementById('loadMore');
+                if (result.length % 10 === 0) {
+                    loadMore.classList.remove('hide');
+                } else {
+                    loadMore.classList.add('hide');
+                }
+            });
     }
 
     display(tweetsArr, user) {
+        const goodtweetsArr = tweetsArr.map(item => item = {
+            id: item.id,
+            author: item.author,
+            text: item.text,
+            createdAt: new Date(item.createdAt),
+            comments: item.comments
+        });
+
         const tweetsMain = document.getElementById('tweetsMain');
         const tweetsContainer = document.getElementById('tweetsContainer');
         const tweetsSet = document.getElementById('tweetsSet');
@@ -685,7 +161,7 @@ class TweetFeedView {
                     <div id="tweetsTape" class="tweets__tape">
                     </div> <!-- /.tweets__tape -->
                     <div class="button__tweets-footer">
-                        <button id="loadMore" class="btn btn--load hide">load more</button>
+                        <button id="loadMore" class="btn btn--load">load more</button>
                     </div>
                 </div> <!-- /.tweets__left -->
                 <div id="tweetsRight" class="tweets__right">
@@ -780,7 +256,7 @@ class TweetFeedView {
             return text;
         };
 
-        const tweetsItems = tweetsArr.map(item => {
+        const tweetsItems = goodtweetsArr.map(item => {
             if (item.author === user) {
                 return `<section id="${item.id}" data-tweets="tweet" class="tweets__item">
                 <div class="tweets__item-inner">  
@@ -836,7 +312,7 @@ class TweetFeedView {
 
         const loadMore = document.getElementById('loadMore');
 
-        if (this.containerId.childElementCount < controller.tweetFeed.tweets.length) {
+        if (this.containerId.childElementCount % 10 === 0) {
             loadMore.classList.remove('hide');
         } else {
             loadMore.classList.add('hide');
@@ -874,10 +350,16 @@ class TweetView {
     addCommentView(event) {
         event.preventDefault();
         const setComment = document.forms.setComment;
-        const tweetNow = controller.tweetFeed.tweets.find(item => item.id === document.querySelector('SECTION').id);
-        controller.tweetFeed.addComment(tweetNow.id, setComment.setCommentInput.value);
-        controller.tweetView.display(tweetNow, controller.tweetFeed.user);
-        controller.headerView.display(controller.tweetFeed.user);
+        controller.serv.getTweets(0, 10000)
+            .then(result => result.find(item => item.id === document.querySelector('SECTION').id))
+            .then(result => {
+                controller.serv.addComment(result.id, setComment.setCommentInput.value);
+                return result;
+            })
+            .then(result => {
+                controller.showTweet(result.id, localStorage.getItem('user'));
+                controller.showTweet(result.id, localStorage.getItem('user'));
+            });
     }
 
     display(tweet, user) {
@@ -1080,20 +562,23 @@ class RegistrationView {
 
         formSignUp.formSignUpBtn.addEventListener('click', (event) => {
             event.preventDefault();
-            if (formSignUp.formSignUpPassword.value === formSignUp.formSignUpPasswordAgain.value) {
-                if (controller.registration(formSignUp.formSignUpName.value, formSignUp.formSignUpPassword.value)) {
-                    controller.logInView();
-                } else {
-                    formSignUp.formSignUpName.value = '';
-                    formSignUp.formSignUpPassword.value = '';
-                    formSignUp.formSignUpPasswordAgain.value = '';
-                    formSignUp.formSignUpName.classList.add('red');
-                    formSignUp.formSignUpPassword.classList.add('red');
-                    formSignUp.formSignUpPasswordAgain.classList.add('red');
-                    formSignUp.formSignUpName.placeholder = 'incorrect username or password';
-                    formSignUp.formSignUpPassword.placeholder = 'incorrect username or password';
-                    formSignUp.formSignUpPasswordAgain.placeholder = 'incorrect username or password';
-                }
+            if (formSignUp.formSignUpName.value && formSignUp.formSignUpName.value && formSignUp.formSignUpPassword.value && formSignUp.formSignUpPassword.value === formSignUp.formSignUpPasswordAgain.value) {
+                controller.registration(formSignUp.formSignUpName.value, formSignUp.formSignUpPassword.value)
+                    .then(result => {
+                        if (result === 'registration') {
+                            controller.logInView();
+                        } else {
+                            formSignUp.formSignUpName.value = '';
+                            formSignUp.formSignUpPassword.value = '';
+                            formSignUp.formSignUpPasswordAgain.value = '';
+                            formSignUp.formSignUpName.classList.add('red');
+                            formSignUp.formSignUpPassword.classList.add('red');
+                            formSignUp.formSignUpPasswordAgain.classList.add('red');
+                            formSignUp.formSignUpName.placeholder = 'incorrect username or password';
+                            formSignUp.formSignUpPassword.placeholder = 'incorrect username or password';
+                            formSignUp.formSignUpPasswordAgain.placeholder = 'incorrect username or password';
+                        }
+                    });
             } else {
                 formSignUp.formSignUpName.value = '';
                 formSignUp.formSignUpPassword.value = '';
@@ -1112,7 +597,7 @@ class RegistrationView {
         linkLogIn.addEventListener('click', (event) => {
             event.preventDefault();
             controller.logInView();
-            controller.headerView.display(controller.tweetFeed.user);
+            controller.headerView.display(localStorage.getItem('user'));
         });
     }
 }
@@ -1157,9 +642,22 @@ class LogInView {
         formLogIn.formLogInBtn.addEventListener('click', (event) => {
             event.preventDefault();
 
-            if (controller.logIn(formLogIn.formLogInName.value, formLogIn.formLogInPassword.value)) {
-                controller.getFeed(0, 10, {}, controller.tweetFeed.user);
-                controller.headerView.display(controller.tweetFeed.user);
+            if (formLogIn.formLogInName.value && formLogIn.formLogInPassword.value) {
+                controller.logIn(formLogIn.formLogInName.value, formLogIn.formLogInPassword.value)
+                    .then(result => {
+                        if (result === 'login') {
+                            controller.getFeed(0, 10, {}, localStorage.getItem('user'));
+                            formLogIn.remove();
+                            controller.headerView.display(localStorage.getItem('user'));
+                        } else {
+                            formLogIn.formLogInName.value = '';
+                            formLogIn.formLogInPassword.value = '';
+                            formLogIn.formLogInName.classList.add('red');
+                            formLogIn.formLogInPassword.classList.add('red');
+                            formLogIn.formLogInName.placeholder = 'incorrect username or password';
+                            formLogIn.formLogInPassword.placeholder = 'incorrect username or password';
+                        }
+                    });
             } else {
                 formLogIn.formLogInName.value = '';
                 formLogIn.formLogInPassword.value = '';
@@ -1175,8 +673,21 @@ class LogInView {
         linkSignUp.addEventListener('click', (event) => {
             event.preventDefault();
             controller.registrationView();
-            controller.headerView.display(controller.tweetFeed.user);
+            controller.headerView.display(localStorage.getItem('user'));
         });
+    }
+}
+
+class ErrorView {
+    constructor(containerId) {
+        this.containerId = document.getElementById(containerId);
+    }
+
+    display() {
+        this.containerId.innerHTML = `<div id="error" class="error">
+        <div class="error__title">Error 404</div>
+        <div class="error__text">Something seems to have gone wrong! The page you requested does not exist. It may be out of date, have been deleted or the address in the address bar may be wrong.</div>
+    </div>`;
     }
 }
 
@@ -1202,9 +713,10 @@ class HeaderView {
 
     logOut(event) {
         event.preventDefault();
-        controller.tweetFeed.user = 'guest';
+        localStorage.setItem('user', 'guest');
+        localStorage.setItem('token', '');
         controller.getFeed();
-        controller.headerView.display(controller.tweetFeed.user);
+        controller.headerView.display(localStorage.getItem('user'));
     }
 
     showLogIn(event) {
@@ -1222,6 +734,7 @@ class HeaderView {
 
         const formLogIn = document.forms.formLogIn;
         const formSignUp = document.forms.formSignUp;
+        const error = document.getElementById('error');
 
         // const tweetsSet = document.getElementById('tweetsSet');
         const tweetsRight = document.getElementById('tweetsRight');
@@ -1287,6 +800,24 @@ class HeaderView {
             headerText.addEventListener('click', this.home);
         }
 
+        if (error) {
+            if (headerArrow) {
+                headerArrow.remove();
+                headerTextPage.remove();
+            }
+
+            if (buttonHeader) {
+                buttonHeader.classList.add('hide');
+            }
+
+            headerText.insertAdjacentHTML('afterend', `
+                <img id="headerArrow" class="header__arrow" src="images/Arrow.svg" alt="">
+                <div id="headerTextPage" class="header__text--page-name">Error</div>`);
+
+            headerText.removeEventListener('click', this.home);
+            headerText.addEventListener('click', this.home);
+        }
+
         if (tweetsRight) {
             if (Array.from(tweetsRight.classList).includes('hide')) {
                 headerText.insertAdjacentHTML('afterend', `
@@ -1304,15 +835,187 @@ class HeaderView {
     }
 }
 
+class TweetFeedApiService {
+    constructor(server) {
+        this.server = server;
+    }
+
+    token = '';
+
+    static header() {
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        return myHeaders;
+    }
+
+    async registrationApi(name, password) {
+        const raw = JSON.stringify({
+            "login": name,
+            "password": password
+        });
+
+        const requestOptions = {
+            method: 'POST',
+            headers: TweetFeedApiService.header(),
+            body: raw,
+            redirect: 'follow'
+        };
+
+        return fetch(`${this.server}/registration`, requestOptions)
+            .then(response => response.text())
+            .then(result => JSON.parse(result))
+            .catch(error => console.log('error', error));
+    }
+
+    login(name, password) {
+        const raw = JSON.stringify({
+            "login": name,
+            "password": password
+        });
+
+        const requestOptions = {
+            method: 'POST',
+            headers: TweetFeedApiService.header(),
+            body: raw,
+            redirect: 'follow'
+        };
+
+        return fetch(`${this.server}/login`, requestOptions)
+            .then(response => response.text())
+            .then(result => JSON.parse(result))
+            .then(result => {
+                localStorage.setItem('token', JSON.stringify(result.token));
+                return result;
+            })
+            .catch(error => console.log('error', error));
+    }
+
+    async getTweets(from = 0, count = 10, filterConfig = {}) {
+        const requestOptions = {
+            method: 'GET',
+            redirect: 'follow'
+        };
+
+        let url = `${this.server}/tweet?from=${from}&count=${count}`;
+
+        let filter = '';
+
+        if (Object.keys(filterConfig).length !== 0) {
+            if ('author' in filterConfig) {
+                filter += `&author=${filterConfig.author}`;
+            }
+
+            if ('text' in filterConfig) {
+                filter += `&text=${filterConfig.text}`;
+            }
+
+            if ('dateFrom' in filterConfig) {
+                filter += `&dateFrom=${filterConfig.dateFrom}`;
+            }
+
+            if ('dateTo' in filterConfig) {
+                filter += `&dateTo=${filterConfig.dateTo}`;
+            }
+
+            if ('hashtags' in filterConfig) {
+                filter += `&hashtags=${filterConfig.hashtags}`;
+            }
+
+            url += filter;
+        }
+
+        return fetch(url, requestOptions)
+            .then(response => response.text())
+            .then(result => JSON.parse(result))
+            .catch(error => console.log('error', error));
+    }
+
+    addTweet(text) {
+        const myHeaders = TweetFeedApiService.header();
+        myHeaders.append("Authorization", `Bearer ${JSON.parse(localStorage.getItem('token'))}`);
+
+        const raw = JSON.stringify({
+            "text": `${text}`
+        });
+
+        const requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+        };
+
+        return fetch(`${this.server}/tweet`, requestOptions)
+            .then(response => response.text())
+            .then(result => JSON.parse(result))
+            .catch(error => console.log('error', error));
+    }
+
+    deleteTweet(id) {
+        const myHeaders = TweetFeedApiService.header();
+        myHeaders.append("Authorization", `Bearer ${JSON.parse(localStorage.getItem('token'))}`);
+
+        const requestOptions = {
+            method: 'DELETE',
+            headers: myHeaders,
+            redirect: 'follow'
+        };
+
+        return fetch(`${this.server}/tweet/${id}`, requestOptions)
+            .then(response => response.text())
+            .catch(error => console.log('error', error));
+    }
+
+    editTweet(id, text) {
+        const myHeaders = TweetFeedApiService.header();
+        myHeaders.append("Authorization", `Bearer ${JSON.parse(localStorage.getItem('token'))}`);
+
+        const raw = JSON.stringify({
+            'text': `${text}`
+        });
+
+        const requestOptions = {
+            method: 'PUT',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+        };
+
+        return fetch(`${this.server}/tweet/${id}`, requestOptions)
+            .then(response => response.text())
+            .catch(error => console.log('error', error));
+    }
+
+    addComment(id, text) {
+        const myHeaders = TweetFeedApiService.header();
+        myHeaders.append("Authorization", `Bearer ${JSON.parse(localStorage.getItem('token'))}`);
+
+        const raw = JSON.stringify({
+            "text": `${text}`
+        });
+
+        const requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+        };
+
+        return fetch(`${this.server}/tweet/${id}/comment`, requestOptions)
+            .then(response => response.text())
+            .then(result => JSON.parse(result))
+            .catch(error => console.log('error', error));
+    }
+}
 class TweetsController {
     constructor() {
-        this.tweetFeed = new TweetFeed();
         this.headerView = new HeaderView('headerInner');
         this.tweetsFeedView = new TweetFeedView('tweetsTape');
         this.tweetView = new TweetView('tweetsTape');
-        this.userList = new UserList(usersArr);
         this.registr = new RegistrationView('tweetsMain');
         this.logInViewClass = new LogInView('tweetsMain');
+        this.error = new ErrorView('tweetsMain');
+        this.serv = new TweetFeedApiService('https://jslabapi.datamola.com');
     }
 
     setCurrentUser(user) {
@@ -1323,38 +1026,43 @@ class TweetsController {
     }
 
     addTweet(text) {
-        this.tweetFeed.add(text);
-        this.getFeed(0, 10, {});
+        this.serv.addTweet(text)
+            .then(result => this.getFeed(0, 10, {}));
     }
 
     editTweet(id, text) {
-        this.tweetFeed.edit(id, text);
-        this.getFeed(0, 10, {});
+        this.serv.editTweet(id, text)
+            .then(result => this.getFeed(0, 10, {}));
     }
 
     removeTweet(id) {
-        this.tweetFeed.remove(id);
-        this.getFeed(0, 10, {});
+        return this.serv.deleteTweet(id)
+            .then(result => this.getFeed(0, 10, {}));
     }
 
     getFeed(skip = 0, top = 10, filterConfig = {}) {
-        this.tweetsFeedView.display(this.tweetFeed.getPage(skip, top, filterConfig), this.tweetFeed.user);
+        return this.serv.getTweets(skip, top, filterConfig)
+            .then(result => {
+                this.tweetsFeedView.display(result, localStorage.getItem('user'));
+                return result;
+            });
     }
 
     showTweet(id) {
-        if (id) {
-            const tweetGet = this.tweetFeed.get(id);
-            if (tweetGet) {
-                this.tweetView.display(tweetGet, this.tweetFeed.user);
-            }
-        }
+        return this.serv.getTweets(0, 100000)
+            .then(result => result.find(item => item.id === id))
+            .then(result => this.tweetView.display(result, localStorage.getItem('user')));
     }
 
     registration(name, password) {
-        if (this.userList.addUser(name, password)) {
-            return true;
-        }
-        return false;
+        return this.serv.registrationApi(name, password)
+            .then(result => {
+                if (result.statusCode < 205 || result.id) {
+                    return 'registration';
+                } else {
+                    throw new Error('not registration');
+                }
+            });
     }
 
     registrationView(userName) {
@@ -1372,32 +1080,39 @@ class TweetsController {
             return false;
         }
 
-        const user = this.userList.users.find(item => item.name === name);
-
-        if (user && user.password === password) {
-            this.setCurrentUser(name);
-            return true;
-        }
+        return this.serv.login(name, password)
+            .then(result => {
+                if (result.statusCode < 205 || result.token) {
+                    localStorage.setItem('user', name);
+                    return 'login';
+                } else {
+                    throw new Error('not login');
+                }
+            })
+            .catch(error => console.error(error));
     }
 
     logInView() {
-        if (!this.tweetFeed.user || this.tweetFeed.user === 'guest') {
+        if (!localStorage.getItem('user') || localStorage.getItem('user') === 'guest') {
             this.logInViewClass.display();
-            this.headerView.display(this.tweetFeed.user);
+            this.headerView.display(localStorage.getItem('user'));
         }
     }
-}
 
-function local(tweets, userList, user) {
-    if (localStorage.length === 0) {
-        localStorage.setItem('tweets', JSON.stringify(tweets));
-        localStorage.setItem('userList', JSON.stringify(userList));
-        localStorage.setItem('user', JSON.stringify(user));
+    errorView() {
+        this.error.display();
     }
 }
 
-local(tweets, usersArr, 'guest');
+function local() {
+    if (localStorage.getItem('user')) {
+        return;
+    }
+    localStorage.setItem('user', 'guest');
+}
+
+local();
 
 const controller = new TweetsController();
 controller.getFeed();
-controller.headerView.display(controller.tweetFeed.user);
+controller.headerView.display(localStorage.getItem('user'));
